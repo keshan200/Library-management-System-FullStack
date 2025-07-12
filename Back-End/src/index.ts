@@ -1,6 +1,8 @@
 import express ,{Request,Response}from "express"
 import dotenv from "dotenv"
 import {connectDB} from "./db/mongo"
+import rootRouter from "./routes"
+import { errorHandler } from "./middlewares/errorHandler"
 
 
 
@@ -13,7 +15,8 @@ const app =  express()
 const PORT = process.env.PORT
 app.use(express.json())
 
-
+app.use("/api",rootRouter)
+app.use(errorHandler)
 
 
 
