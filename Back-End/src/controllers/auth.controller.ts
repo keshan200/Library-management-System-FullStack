@@ -14,11 +14,11 @@ export const signUp =  async (req:Request,res:Response,next:NextFunction) =>{
 
       try{
        
-        const { first_name,img, last_name, email, password, mobile, role } = req.body;
+         const { first_name, last_name, email, password, mobile, role } = req.body;
 
-        
+         const img = req.file ? req.file.path : ""; 
 
-        const existingUser = await userModel.findOne({ email });
+         const existingUser = await userModel.findOne({ email });
         
         if (existingUser) {
             throw new APIError(400, "A user with this email already exists.");
@@ -52,7 +52,6 @@ export const signUp =  async (req:Request,res:Response,next:NextFunction) =>{
             },
         });
        
-    
 
       }catch(error:any){
         next(error)
