@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import {connectDB} from "./db/mongo"
 import rootRouter from "./routes"
 import { errorHandler } from "./middlewares/errorHandler"
+import cookieParser from "cookie-parser"
 
 
 
@@ -10,10 +11,11 @@ import { errorHandler } from "./middlewares/errorHandler"
 dotenv.config()
 const app =  express()
 
-
+app.use(express.json())
+app.use(cookieParser())
 
 const PORT = process.env.PORT
-app.use(express.json())
+
 
 app.use("/api",rootRouter)
 app.use(errorHandler)
@@ -21,9 +23,6 @@ app.use("/uploads", express.static("uploads"));
 
 
 
-app.get("/",(req:Request,res:Response)=>{
- res.send("redd")
-})
 
 connectDB().then(()=>{
  app.listen(PORT,() => {
