@@ -199,3 +199,26 @@ export const getAllUsers =  async(req:Request,res:Response,next:NextFunction) =>
     } 
 
 }
+
+
+export const logout = (req:Request,res:Response,next:NextFunction) =>{
+    
+   try{
+
+    const isProd = process.env.NODE_ENV === "production"
+
+    res.cookie("refreshToken","",{
+
+      httpOnly:true,
+      secure:isProd,
+      expires:new Date(0),
+      path:"/api/auth/refresh-token"
+    })
+    
+    res.status(200).json({message:"Logout successful"})
+
+   }catch(error:any){
+     next(error)
+   }
+
+}
