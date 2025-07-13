@@ -53,6 +53,7 @@ const userSchema =  new mongoose.Schema<User>({
       required: [true, "Mobile number is required"],
      
     },
+    
     role: {
       type: String,
       enum: ["admin", "staff"],

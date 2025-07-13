@@ -18,6 +18,7 @@ const PORT = process.env.PORT
 
 
 app.use("/api",rootRouter)
+
 app.use(errorHandler)
 app.use("/uploads", express.static("uploads"));
 
