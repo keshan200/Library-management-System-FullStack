@@ -1,8 +1,8 @@
 import { Router } from "express";
-import {createReader } from "../controllers/reader.controller";
+import {createReader, getReaders } from "../controllers/reader.controller";
 
 
 const readerRouter = Router()
 readerRouter.post("/save",createReader)
-
+readerRouter.get("/get",getReaders)
 export default readerRouter

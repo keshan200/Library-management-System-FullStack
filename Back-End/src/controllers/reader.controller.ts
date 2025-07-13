@@ -14,3 +14,17 @@ export const createReader = async(req:Request,res:Response,next:NextFunction) =>
         next(error)
     }
  }
+
+
+ export const getReaders =async (req:Request,res:Response,next:NextFunction) => {
+    
+    try{
+        const readers =  await readerModel.find()
+        res.status(200).json(readers)
+
+    }catch(error){
+       next(error)
+
+    }
+
+ }
