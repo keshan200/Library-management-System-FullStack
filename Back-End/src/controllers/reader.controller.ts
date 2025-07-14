@@ -1,5 +1,6 @@
 import { Request,Response,NextFunction } from "express"
 import { readerModel } from "../models/readerModel"
+import { APIError } from "../errors/ApiErrors"
 
 
 export const createReader = async(req:Request,res:Response,next:NextFunction) =>{
@@ -26,5 +27,44 @@ export const createReader = async(req:Request,res:Response,next:NextFunction) =>
        next(error)
 
     }
+
+ }
+
+
+
+ export const updateReader = async  (req:Request,res:Response,next:NextFunction) =>{
+
+     try{
+        const updateReader =await readerModel.findByIdAndUpdate(req.params.id,req.body,{
+             new:true,
+             runValidators:true
+        })
+
+        if(!updateReader){
+            throw new APIError(404,"Reader not found")
+        }
+        
+        res.status(200).json(updateReader)
+     }catch(error:any){
+          next(error)
+     }
+
+ }
+
+
+ export const deleteReader = async (req:Request,res:Response,next:NextFunction) => {
+
+     try{
+       
+       const deleteReader =  await readerModel.findByIdAndDelete(req.params.id)
+       
+       if(!deleteReader){
+        throw new APIError(404,"Reader not Found!")
+       }
+
+       res.status(200).json({message : "Customer Delete"})
+     }catch(error:any){
+       next(error)
+     }
 
  }
