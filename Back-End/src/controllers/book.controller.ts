@@ -56,3 +56,31 @@ export const updateBook = async (req: Request, res: Response, next: NextFunction
     next(error);
   }
 };
+
+
+export const getAllBooks =  async(req: Request, res: Response, next: NextFunction) =>{
+    try{
+        const books =  await BookModel.find()
+       res.status(200).json(books);
+    }catch(error:any){
+        next(error)
+    }
+}
+
+
+export const deleteBook = async(req: Request, res: Response, next: NextFunction) =>{
+   
+    try{
+      const deleteBook = await BookModel.findByIdAndDelete(req.params.id)
+
+      if(!deleteBook){
+        throw new APIError(404,"Book Not Found")
+      }
+
+      res.status(200).json({message:"Book Delete Successfull"})
+    }catch(error:any){
+         next(error)
+    }
+}
+
+
