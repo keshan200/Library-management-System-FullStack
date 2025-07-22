@@ -29,7 +29,7 @@ const Sidebar = () => {
       {/* Header */}
       <div className="p-6 ">
         <div>
-          <h1 className="text-2xl font-bold text-purple-400 mb-1"></h1>
+          <h1 className="text-2xl font-normal text-blue-400 mb-1"></h1>
           <p className="text-sm text-black"></p>
         </div>
       </div>
@@ -45,10 +45,10 @@ const Sidebar = () => {
               <div
                 key={item.name}
                 onClick={() => handleItemClick(item.path)}
-                className={`flex items-center space-x-4 px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 group ${
+                className={`flex items-center space-x-4 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 group ${
                   isActive
-                    ? 'bg-gradient-to-r from-indigo-900 to-indigo-900 border-l-4 border-purple-400 text-white shadow-md shadow-purple-500/30'
-                    : 'hover:bg-indigo-900/40 text-slate-300 hover:text-white hover:translate-x-2'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600  border-l-4 border-purple-400 text-white shadow-md shadow-blue-500/30'
+                    : 'hover:bg-indigo-900/40 text-black hover:text-black hover:translate-x-2'
                 }`}
               >
                 <div
@@ -85,8 +85,8 @@ const Sidebar = () => {
         </nav>
 
         {/* Quick Stats */}
-        <div className="mt-8 p-4 bg-slate-800 rounded-xl border border-slate-700">
-          <h3 className="text-sm font-semibold text-slate-300 mb-3">
+        <div className="mt-12 p-4 bg-slate-800 rounded-xl border border-slate-700">
+          <h3 className="text-sm font-normal text-slate-300 mb-3">
             Quick Stats
           </h3>
           <div className="space-y-2">

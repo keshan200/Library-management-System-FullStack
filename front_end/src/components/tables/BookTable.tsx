@@ -82,7 +82,7 @@ const BookTable: React.FC<BookDataProps> = ({ books }) => {
                         <div className="flex items-center gap-4">
                           <div className="relative">
                             <img
-                              src={`http://localhost:3000/${book.coverImg.replace(/\\/g, "/")}`}
+                              src={`http://localhost:3000/${book.coverImg}`}
                               alt={book.name}
                               className="w-14 h-12 object-cover rounded-lg shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105"
                             />
@@ -117,7 +117,7 @@ const BookTable: React.FC<BookDataProps> = ({ books }) => {
                         </div>
                       </td>
 
-                    {/* Availability */}
+                     {/* Availability */}
                        <td className="py-6 px-6">
   <div className="w-full">
     {/* Progress Bar */}

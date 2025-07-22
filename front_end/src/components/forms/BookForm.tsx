@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import type { Book, BookFromData } from "../../types/Book";
+import { BookOpen, User, Tag, Package, Hash } from "lucide-react";
 
-interface bookFormProps {
-    book?: Book | null
-    onSubmit : (bookData : Omit<Book , "_id">) => void
+interface BookFormProps {
+  book?: Book | null;
+  onSubmit: (bookData: Omit<Book, "_id">) => void;
 }
 
-
- interface FormErrors {
+interface FormErrors {
   name?: string;
   coverImg?: string;
   author?: string;
@@ -16,293 +16,281 @@ interface bookFormProps {
   availableBooks?: string;
 }
 
+const BookForm = ({ book, onSubmit }: BookFormProps) => {
+  const [formData, setFormData] = useState<BookFromData>({
+    name: "",
+    author: "",
+    category: "",
+    coverImg: "", // can be string or File
+    totalBooks: 0,
+    availableBooks: 0,
+  });
 
-const BookForm = ({book , onSubmit}:bookFormProps) => {
+  const [errors, setErrors] = useState<FormErrors>({});
 
-     const [formData , setFormData] = useState<BookFromData>({
-         name: "",
-         author: "",
-         category: "",
-         coverImg: "",
-         totalBooks: 0,
-         availableBooks: 0,
-      
-     })
-
-     
-     const [erros, setErros] = useState<FormErrors>({})
-
-
-     useEffect(() => {
-        
-        if(book){
-            
-            setFormData({
-                name: book.name,
-                author: book.author,
-                category: book.category,
-                coverImg: book.coverImg,
-                totalBooks: book.totalBooks,
-                availableBooks: book.availableBooks,
-            })
-        }else{
-             setFormData({
-                name: "",
-                author: "",
-                category: "",
-                coverImg: "",
-                totalBooks: 0,
-                availableBooks: 0,
-            })
-        } 
-        setErros({})
-
-        },[book])
-
-    
-    const validateFrom  = () : boolean => {
-
-          const newErrors : FormErrors = {}
-           
-           // Name validation
-         if (!formData.name.trim()) {
-         newErrors.name = "Name is required";
-         }
-
-         // Author validation
-         if (!formData.author.trim()) {
-         newErrors.author = "Author is required";
-        }
-
-        // Category validation
-         if (!formData.category.trim()) {
-              newErrors.category = "Category is required";
-         }
-
-       // Cover image validation
-         if (!formData.coverImg.trim()) {
-          newErrors.coverImg = "Cover image URL is required";
-         }
-
-       // Total books validation
-         if (formData.totalBooks <= 0) {
-           newErrors.totalBooks = "Total books must be greater than 0";
-         }
-
-        // Available books validation
-         if (formData.availableBooks < 0) {
-          newErrors.availableBooks = "Available books cannot be negative";
-        } else if (formData.availableBooks > formData.totalBooks) {
-          newErrors.availableBooks = "Available books cannot exceed total books";
-        }
-
-       // Set the errors
-       setErros(newErrors);
-
-      // Return true if no errors
-       return Object.keys(newErrors).length === 0;
-    }  
-    
-    
-   
-    const handleSubmit = (e: React.FormEvent) => {
-
-        e.preventDefault()
-        if(validateFrom()){
-            onSubmit(formData)
-        }
+  useEffect(() => {
+    if (book) {
+      setFormData({
+        name: book.name,
+        author: book.author,
+        category: book.category,
+        coverImg: book.coverImg, // existing image URL
+        totalBooks: book.totalBooks,
+        availableBooks: book.availableBooks,
+      });
+    } else {
+      setFormData({
+        name: "",
+        author: "",
+        category: "",
+        coverImg: "",
+        totalBooks: 0,
+        availableBooks: 0,
+      });
     }
+    setErrors({});
+  }, [book]);
 
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
 
-   const handleChange = (
-  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-) => {
-  const { name, value } = e.target;
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.author.trim()) newErrors.author = "Author is required";
+    if (!formData.category.trim())
+      newErrors.category = "Category is required";
 
-  
-  const updatedValue =
-    name === "totalBooks" || name === "availableBooks"
-      ? Number(value)
-      : value;
+    if (formData.totalBooks <= 0)
+      newErrors.totalBooks = "Total books must be greater than 0";
 
-  setFormData((prev) => ({
-    ...prev,
-    [name]: updatedValue,
-  }));
+    if (formData.availableBooks < 0)
+      newErrors.availableBooks = "Available books cannot be negative";
+    else if (formData.availableBooks > formData.totalBooks)
+      newErrors.availableBooks =
+        "Available books cannot exceed total books";
 
-  
-  if (erros[name as keyof FormErrors]) {
-    setErros((prev) => ({
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if(validateForm()){
+      onSubmit(formData);
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type } = e.target;
+
+   
+    if (type === "file") {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        setFormData((prev) => ({
+          ...prev,
+          coverImg: file,
+        }));
+      }
+      return;
+    }
+ // Handle other fields
+    const updatedValue =
+      name === "totalBooks" || name === "availableBooks"
+        ? Number(value)
+        : value;
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: undefined,
+      [name]: updatedValue,
     }));
-  }
+
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    }
+  };
+
+return (
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-blue-50 to-cyan-50 p-3">
+      <div className="max-w-xl mx-auto">
+        
+        {/* Header */}
+        <div className="text-center mb-4">
+          <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg mb-2">
+            <BookOpen className="w-5 h-5 text-white" />
+          </div>
+          <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+            {book ? "Edit Book" : "Add New Book"}
+          </h2>
+          <p className="text-gray-500 text-xs mt-1">Fill in the details below</p>
+        </div>
+
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-4">
+          
+          <div className="space-y-4">
+            
+            {/* Name & Author Row */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="relative">
+                <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
+                  <BookOpen className="w-3 h-3 mr-1 text-blue-500" />
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 bg-gray-50/50 border rounded-lg focus:bg-white focus:outline-none transition-all duration-200 ${
+                    errors.name
+                      ? "border-red-400 focus:border-red-500"
+                      : "border-gray-200 focus:border-blue-400"
+                  }`}
+                  placeholder="Enter book title"
+                />
+                {errors.name && (
+                  <p className="text-xs text-red-500 mt-1">{errors.name}</p>
+                )}
+              </div>
+
+              <div className="relative">
+                <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
+                  <User className="w-3 h-3 mr-1 text-blue-500" />
+                  Author
+                </label>
+                <input
+                  type="text"
+                  name="author"
+                  value={formData.author}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 bg-gray-50/50 border rounded-lg focus:bg-white focus:outline-none transition-all duration-200 ${
+                    errors.author
+                      ? "border-red-400 focus:border-red-500"
+                      : "border-gray-200 focus:border-blue-400"
+                  }`}
+                  placeholder="Enter author name"
+                />
+                {errors.author && (
+                  <p className="text-xs text-red-500 mt-1">{errors.author}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Category & Cover Image Row */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="relative">
+                <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
+                  <Tag className="w-3 h-3 mr-1 text-blue-500" />
+                  Category
+                </label>
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 bg-gray-50/50 border rounded-lg focus:bg-white focus:outline-none transition-all duration-200 ${
+                    errors.category
+                      ? "border-red-400 focus:border-red-500"
+                      : "border-gray-200 focus:border-blue-400"
+                  }`}
+                  placeholder="Fiction, Biography, etc."
+                />
+                {errors.category && (
+                  <p className="text-xs text-red-500 mt-1">{errors.category}</p>
+                )}
+              </div>
+
+              <div className="relative">
+                <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
+               
+                  Cover Image
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    name="coverImg"
+                    onChange={handleChange}
+                    className={`w-full px-3 py-2 bg-gray-50/50 border border-dashed rounded-lg focus:bg-white focus:outline-none transition-all duration-200 text-xs ${
+                      errors.coverImg
+                        ? "border-red-400 focus:border-red-500"
+                        : "border-gray-200 focus:border-blue-400"
+                    } file:mr-1 file:py-1 file:px-2 file:rounded file:border-0 file:bg-blue-500 file:text-white file:text-xs file:cursor-pointer hover:file:bg-blue-600`}
+                  />
+                </div>
+                {errors.coverImg && (
+                  <p className="text-xs text-red-500 mt-1">{errors.coverImg}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Quantities Row */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="relative">
+                <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
+                  <Package className="w-3 h-3 mr-1 text-blue-500" />
+                  Total Books
+                </label>
+                <input
+                  type="number"
+                  name="totalBooks"
+                  value={formData.totalBooks}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 bg-gray-50/50 border rounded-lg focus:bg-white focus:outline-none transition-all duration-200 ${
+                    errors.totalBooks
+                      ? "border-red-400 focus:border-red-500"
+                      : "border-gray-200 focus:border-blue-400"
+                  }`}
+                  placeholder="0"
+                  min="0"
+                />
+                {errors.totalBooks && (
+                  <p className="text-xs text-red-500 mt-1">{errors.totalBooks}</p>
+                )}
+              </div>
+
+              <div className="relative">
+                <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
+                  <Hash className="w-3 h-3 mr-1 text-blue-500" />
+                  Available Books
+                </label>
+                <input
+                  type="number"
+                  name="availableBooks"
+                  value={formData.availableBooks}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 bg-gray-50/50 border rounded-lg focus:bg-white focus:outline-none transition-all duration-200 ${
+                    errors.availableBooks
+                      ? "border-red-400 focus:border-red-500"
+                      : "border-gray-200 focus:border-blue-400"
+                  }`}
+                  placeholder="0"
+                  min="0"
+                />
+                {errors.availableBooks && (
+                  <p className="text-xs text-red-500 mt-1">{errors.availableBooks}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2.5 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200 font-semibold text-sm shadow hover:shadow-lg"
+              >
+                {book ? "Update Book" : "Add Book"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 };
 
-
-
-
-    return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-lg border border-gray-200"
-    >
-      <h2 className="text-2xl font-bold text-center text-indigo-600 mb-6">
-        {book ? "Edit Book" : "Add New Book"}
-      </h2>
-
-      {/* Book Name */}
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">
-          Name
-        </label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-            erros.name
-              ? "border-red-400 focus:ring-red-500"
-              : "border-gray-300 focus:ring-indigo-500"
-          }`}
-          placeholder="Enter book name"
-        />
-        {erros.name && (
-          <p className="text-sm text-red-500 mt-1">{erros.name}</p>
-        )}
-      </div>
-
-      {/* Author */}
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">
-          Author
-        </label>
-        <input
-          type="text"
-          name="author"
-          value={formData.author}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-            erros.author
-              ? "border-red-400 focus:ring-red-500"
-              : "border-gray-300 focus:ring-indigo-500"
-          }`}
-          placeholder="Enter author name"
-        />
-        {erros.author && (
-          <p className="text-sm text-red-500 mt-1">{erros.author}</p>
-        )}
-      </div>
-
-      {/* Category */}
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">
-          Category
-        </label>
-        <input
-          type="text"
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-            erros.category
-              ? "border-red-400 focus:ring-red-500"
-              : "border-gray-300 focus:ring-indigo-500"
-          }`}
-          placeholder="Enter category"
-        />
-        {erros.category && (
-          <p className="text-sm text-red-500 mt-1">{erros.category}</p>
-        )}
-      </div>
-
-      {/* Cover Image */}
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">
-          Cover Image URL
-        </label>
-        <input
-          type="text"
-          name="coverImg"
-          value={formData.coverImg}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-            erros.coverImg
-              ? "border-red-400 focus:ring-red-500"
-              : "border-gray-300 focus:ring-indigo-500"
-          }`}
-          placeholder="Enter cover image URL"
-        />
-        {erros.coverImg && (
-          <p className="text-sm text-red-500 mt-1">{erros.coverImg}</p>
-        )}
-      </div>
-
-      {/* Total Books */}
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">
-          Total Books
-        </label>
-        <input
-          type="number"
-          name="totalBooks"
-          value={formData.totalBooks}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-            erros.totalBooks
-              ? "border-red-400 focus:ring-red-500"
-              : "border-gray-300 focus:ring-indigo-500"
-          }`}
-        />
-        {erros.totalBooks && (
-          <p className="text-sm text-red-500 mt-1">
-            {erros.totalBooks}
-          </p>
-        )}
-      </div>
-
-      {/* Available Books */}
-      <div className="mb-6">
-        <label className="block text-gray-700 font-medium mb-1">
-          Available Books
-        </label>
-        <input
-          type="number"
-          name="availableBooks"
-          value={formData.availableBooks}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-            erros.availableBooks
-              ? "border-red-400 focus:ring-red-500"
-              : "border-gray-300 focus:ring-indigo-500"
-          }`}
-        />
-        {erros.availableBooks && (
-          <p className="text-sm text-red-500 mt-1">
-            {erros.availableBooks}
-          </p>
-        )}
-      </div>
-
-      {/* Submit Button */}
-      <button
-        type="submit"
-        className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition"
-      >
-        {book ? "Update Book" : "Add Book"}
-      </button>
-    </form>
-  );
-
-
-
-
-}
-
-
-export default BookForm
-
-
-    
-
+export default BookForm;

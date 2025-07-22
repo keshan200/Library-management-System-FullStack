@@ -2,12 +2,13 @@ import  { useEffect, useState } from 'react';
 import { Search, Filter, Plus, User, UserCheck } from 'lucide-react';
 import BookTable from '../components/tables/BookTable';
 import Dialog from "../components/Dialog"
-import type { Book } from "../types/Book";
+
 import { booksData } from '../data/data';
-import { getAllBooks } from '../service/bookService';
+import { add_book, getAllBooks, update_book } from '../service/bookService';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import  toast  from 'react-hot-toast';
 import BookForm from '../components/forms/BookForm';
+import type { Book } from '../types/Book';
 
 
 export const ModernBookPage : React.FC = () => {
@@ -18,7 +19,7 @@ export const ModernBookPage : React.FC = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [selectedCustomer, setSelectedCustomer] = useState<Book | null>(null)
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
 
 
 
@@ -60,22 +61,101 @@ export const ModernBookPage : React.FC = () => {
     setIsAddDialogOpen(false)
     setIsEditDialogOpen(false)
     setIsDeleteDialogOpen(false)
-    setSelectedCustomer(null)
+    setSelectedBook(null)
   }
 
 
   const handleAddBook = () => {
-    setSelectedCustomer(null)
+    setSelectedBook(null)
     setIsAddDialogOpen(true)
   }
 
-  const handleUpdate = (customer: Book) => {
-    console.log('Update customer:', customer);
-  };
 
-  const handleDelete = (customer: Book) => {
-    console.log('Delete customer:', customer);
-  };
+ const handleFormSubmit = async (bookData: Omit<Book, "_id">) => {
+  if (selectedBook) {
+   
+    try {
+      const response = await update_book(selectedBook._id, bookData);
+      const updatedBook = response.data; 
+
+      setBooks((prev) =>
+        prev.map((book) =>
+          book._id === selectedBook._id ? updatedBook : book
+        )
+      );
+      setIsEditDialogOpen(false);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  } else {
+   
+    try {
+      const response = await add_book(bookData);
+      const newBook = response.data; 
+
+      setBooks((prev) => [...prev, newBook]);
+
+      toast.success("created successfully!!")
+      setIsAddDialogOpen(false);
+
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  }
+
+  setSelectedBook(null);
+};
+
+if(isLoading){
+   return (  <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        backgroundColor: '#f5f5f5',
+      }}
+    >
+      <div
+        style={{
+          width: '50px',
+          height: '50px',
+          border: '5px solid #ccc',
+          borderTop: '5px solid rgb(79, 22, 250)',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+        }}
+      ></div>
+      <p
+        style={{
+          marginTop: '20px',
+          fontSize: '18px',
+          color: 'rgb(79, 22, 250)',
+          fontFamily: 'Arial, sans-serif',
+        }}
+      >
+        Loading...
+      </p>
+      <style>
+        {` 
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
+    </div>);
+}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
@@ -84,11 +164,11 @@ export const ModernBookPage : React.FC = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">
-                Books Management
+               <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">
+                 Books Management
               </h1>
-              <p className="text-slate-600 text-lg">Manage your library members and their preferences</p>
-            </div>
+            <p className="text-gray-600 text-lg">Manage your library members and their preferences</p>
+        </div>
 
 
              <button
@@ -111,7 +191,7 @@ export const ModernBookPage : React.FC = () => {
               }}
              title='Add New Book'
             >
-              <BookForm onSubmit={handleAddBook} />
+              <BookForm onSubmit={handleFormSubmit} />
             </Dialog>
           </div>
         </div>

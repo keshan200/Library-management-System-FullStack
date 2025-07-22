@@ -1,5 +1,5 @@
 import { apiClient, BASE_URL } from "./apiClient";
-import type {Book} from "../types/Book"
+import type {Book, BookFromData} from "../types/Book"
 
 const BOOK_API_URL = `${BASE_URL}/book`
 
@@ -19,15 +19,25 @@ export const delete_Books = async(_id:string) : Promise<void> =>{
 };
 
 
-export const add_book = async(booksData:Omit<Book,"_id">) => {
+export const add_book = async (booksData: BookFromData) => {
+ 
+  const formData = new FormData();
 
-    const response = await apiClient.post<Book>(BOOK_API_URL,booksData,{
-        headers:{
-            "Content-Type":"application/json"
-        }
-    })
- return response
-}
+  formData.append("name", booksData.name);
+  formData.append("author", booksData.author);
+  formData.append("category", booksData.category);
+  formData.append("totalBooks", booksData.totalBooks.toString());
+  formData.append("availableBooks", booksData.availableBooks.toString());
+  formData.append("coverImg", booksData.coverImg);
+
+  const response = await apiClient.post(`${BOOK_API_URL}/create`, formData,{
+      headers: {
+      "Content-Type": "multipart/form-data", 
+    },
+  });
+  return response;
+};
+
 
 
 export const update_book =  async(_id:string ,booksData:Omit<Book,"_id">) =>{

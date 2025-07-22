@@ -1,7 +1,7 @@
 export interface Book {
   _id: string;          
   name: string;          
-  coverImg: string;     
+  coverImg: string | File;     
   author: string;       
   category: string;     
   totalBooks: number;   
@@ -11,7 +11,7 @@ export interface Book {
 
 export type BookFromData = {
      name: string;          
-  coverImg: string;     
+  coverImg: string | File;     
   author: string;       
   category: string;     
   totalBooks: number;   
