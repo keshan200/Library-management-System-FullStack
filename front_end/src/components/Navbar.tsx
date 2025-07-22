@@ -6,7 +6,7 @@ const Navbar = () => {
  
 
  return (
-    <nav className='bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 shadow-2xl border-b border-purple-500/20'>
+    <nav className='bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 shadow-2xl '>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex justify-between items-center h-16'>
           {/* Logo Section */}

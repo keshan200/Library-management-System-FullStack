@@ -3,6 +3,10 @@ import Login from "./pages/LoginPage";
 import Layout from "./pages/Layout";
 import Dashboard from "./pages/Dashboard";
 import AdminRoutes from "./pages/AdminRoutes";
+import BookForm from "./components/forms/BookForm";
+import ModernBookTable from "./components/tables/BookTable";
+import{ ModernBookPage} from "./pages/BookManagment";
+
 
 
 
@@ -18,8 +22,9 @@ const router = createBrowserRouter([
        {
          element:<AdminRoutes />,
          children:[
-          {path:"/dashboard", element: <Dashboard /> },
-
+          {path:"/dashboard", element: <Dashboard />},
+          {path:"/books", element: <ModernBookPage />},
+          
          ]
 
        }

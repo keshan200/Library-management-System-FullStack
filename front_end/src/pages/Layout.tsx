@@ -10,7 +10,7 @@ const Layout = () => {
   const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
 
   return (
-    <div className="h-screen">
+    <div className="h-screen overflow-hidden">
       {shouldShowNavbar && (
         <div>
           <Navbar />

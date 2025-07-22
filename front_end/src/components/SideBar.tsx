@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   BarChart3, 
   BookOpen, 
@@ -7,64 +8,71 @@ import {
   History
 } from 'lucide-react';
 
-const Sidebar  = () => {
-  const [activeItem, setActiveItem] = useState('Dashboard');
+const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
-    { name: 'Dashboard', icon: BarChart3, color: 'text-blue-400' },
-    { name: 'Books', icon: BookOpen, color: 'text-green-400' },
-    { name: 'Members', icon: Users, color: 'text-purple-400' },
-    { name: 'Lending', icon: BookMarked, color: 'text-blue-500' },
-    { name: 'History', icon: History, color: 'text-gray-400' }
+    { name: 'Dashboard', path: '/dashboard', icon: BarChart3, color: 'text-blue-400' },
+    { name: 'Books', path: '/books', icon: BookOpen, color: 'text-green-400' },
+    { name: 'Members', path: '/members', icon: Users, color: 'text-purple-400' },
+    { name: 'Lending', path: '/lending', icon: BookMarked, color: 'text-blue-500' },
+    { name: 'History', path: '/history', icon: History, color: 'text-gray-400' }
   ];
 
-  const handleItemClick = (itemName: React.SetStateAction<string>) => {
-    setActiveItem(itemName);
+  const handleItemClick = (path: string) => {
+    navigate(path);
   };
 
   return (
-    <main className="bg-white w-80 h-screen flex flex-col border-r border-blue-700 overflow-hidden">
-      
+    <main className="bg-white w-80 h-screen flex flex-col  overflow-hidden">
       {/* Header */}
-      <div className="p-6 border-b border-indigo-900">
+      <div className="p-6 ">
         <div>
-          <h1 className="text-2xl font-bold text-purple-400 mb-1">LibraryOS</h1>
-          <p className="text-sm text-white">Modern Management</p>
+          <h1 className="text-2xl font-bold text-purple-400 mb-1"></h1>
+          <p className="text-sm text-black"></p>
         </div>
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-4">
         <nav className="space-y-3">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeItem === item.name;
-            
+            const isActive = location.pathname === item.path;
+
             return (
               <div
                 key={item.name}
-                onClick={() => handleItemClick(item.name)}
+                onClick={() => handleItemClick(item.path)}
                 className={`flex items-center space-x-4 px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 group ${
-                  isActive 
-                        ? 'bg-gradient-to-r from-indigo-900 to-indigo-900 border-l-4 border-purple-400 text-white shadow-md shadow-purple-500/30'
-                        : 'hover:bg-indigo-900/40 text-slate-300 hover:text-white hover:translate-x-2'
-
+                  isActive
+                    ? 'bg-gradient-to-r from-indigo-900 to-indigo-900 border-l-4 border-purple-400 text-white shadow-md shadow-purple-500/30'
+                    : 'hover:bg-indigo-900/40 text-slate-300 hover:text-white hover:translate-x-2'
                 }`}
               >
-                <div className={`p-2 rounded-lg ${
-                  isActive 
-                    ? 'bg-purple-500/20 text-purple-400' 
-                    : 'bg-slate-700 group-hover:bg-slate-600'
-                }`}>
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-purple-400' : item.color} transition-colors`} />
+                <div
+                  className={`p-2 rounded-lg ${
+                    isActive
+                      ? 'bg-purple-500/20 text-purple-400'
+                      : 'bg-slate-700 group-hover:bg-slate-600'
+                  }`}
+                >
+                  <Icon
+                    className={`w-5 h-5 ${
+                      isActive ? 'text-purple-400' : item.color
+                    } transition-colors`}
+                  />
                 </div>
-                
-                <span className={`font-medium text-lg transition-all duration-300 ${
-                  isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'
-                }`}>
+
+                <span
+                  className={`font-medium text-lg transition-all duration-300 ${
+                    isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'
+                  }`}
+                >
                   {item.name}
                 </span>
-                
+
                 {/* Active indicator */}
                 {isActive && (
                   <div className="ml-auto">
@@ -78,7 +86,9 @@ const Sidebar  = () => {
 
         {/* Quick Stats */}
         <div className="mt-8 p-4 bg-slate-800 rounded-xl border border-slate-700">
-          <h3 className="text-sm font-semibold text-slate-300 mb-3">Quick Stats</h3>
+          <h3 className="text-sm font-semibold text-slate-300 mb-3">
+            Quick Stats
+          </h3>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-slate-400">Total Books</span>
@@ -94,8 +104,9 @@ const Sidebar  = () => {
             </div>
           </div>
         </div>
-      </div> 
+      </div>
     </main>
   );
 };
-export default Sidebar  
+
+export default Sidebar;
