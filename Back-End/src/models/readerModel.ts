@@ -3,6 +3,7 @@ import mongoose from "mongoose"
 
 
 export interface Reader extends Document{
+  coverImg :string
   firstName:string,
   lastName:string
   email:string
@@ -17,7 +18,10 @@ export interface Reader extends Document{
 
 
 const readerSchema =  new mongoose.Schema<Reader>({
-
+ coverImg: {
+      type: String,
+      required: [true, "Cover image URL is required"],
+    },
 
 firstName: {
     type: String,

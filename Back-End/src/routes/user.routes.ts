@@ -1,4 +1,4 @@
-import { Router } from "express";
+ import { Router } from "express";
 import { getAllUsers, login, logout, refreshToken, signUp } from "../controllers/auth.controller";
 import { upload } from "../middlewares/uploads";
 import { authenticateToken } from "../middlewares/authenticateToken";

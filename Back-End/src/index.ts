@@ -4,6 +4,7 @@ import {connectDB} from "./db/mongo"
 import rootRouter from "./routes"
 import { errorHandler } from "./middlewares/errorHandler"
 import cookieParser from "cookie-parser"
+import cors from "cors";
 
 
 
@@ -11,6 +12,14 @@ import cookieParser from "cookie-parser"
 dotenv.config()
 const app =  express()
 
+const corsOptions = {
+  origin: process.env.CLIENT_ORIGIN,
+  credentials: true,
+  methods: "GET,PUT,PATCH,DELETE,POST,HEAD",
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 
@@ -30,3 +39,5 @@ connectDB().then(()=>{
     console.log(`server running on http://localhost:${PORT}`)
  })
 })
+
+
