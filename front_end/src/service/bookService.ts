@@ -11,11 +11,7 @@ export const getAllBooks = async () : Promise<Book[]> => {
 
 
 export const delete_Books = async(_id:string) : Promise<void> =>{
-    await apiClient.delete(`${BOOK_API_URL}/${_id}`,{
-        headers:{
-            "Content-Type":"application/json"
-        }
-    });
+    await apiClient.delete(`${BOOK_API_URL}/delete/${_id}`)
 };
 
 
@@ -41,10 +37,6 @@ export const add_book = async (booksData: BookFromData) => {
 
 
 export const update_book =  async(_id:string ,booksData:Omit<Book,"_id">) =>{
-     const response = await apiClient.put<Book>(BOOK_API_URL,booksData,{
-        headers:{
-            "Content-Type":"application/json"
-        }
-    })
- return response
+     const response = await apiClient.put(`${BOOK_API_URL}/update/${_id}`,booksData)
+      return response
 }

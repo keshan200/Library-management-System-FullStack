@@ -115,21 +115,13 @@ const BookForm = ({ book, onSubmit }: BookFormProps) => {
   };
 
 return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-blue-50 to-cyan-50 p-3">
+    <div className="bg-gradient-to-br from-violet-50 via-blue-50 to-cyan-50 p-3">
       <div className="max-w-xl mx-auto">
         
         {/* Header */}
-        <div className="text-center mb-4">
-          <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg mb-2">
-            <BookOpen className="w-5 h-5 text-white" />
-          </div>
-          <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-            {book ? "Edit Book" : "Add New Book"}
-          </h2>
-          <p className="text-gray-500 text-xs mt-1">Fill in the details below</p>
-        </div>
+       
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6">
           
           <div className="space-y-4">
             
@@ -145,7 +137,7 @@ return (
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 bg-gray-50/50 border rounded-lg focus:bg-white focus:outline-none transition-all duration-200 ${
+                  className={`w-full px-6 py-2 bg-gray-50/50 border rounded-lg focus:bg-white focus:outline-none transition-all duration-200 ${
                     errors.name
                       ? "border-red-400 focus:border-red-500"
                       : "border-gray-200 focus:border-blue-400"

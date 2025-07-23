@@ -29,8 +29,8 @@ const Sidebar = () => {
       {/* Header */}
       <div className="p-6 ">
         <div>
-          <h1 className="text-2xl font-normal text-blue-400 mb-1"></h1>
-          <p className="text-sm text-black"></p>
+          <h1 className="text-normal  text-blue-400 mb-1"></h1>
+          <p className=" text-black"></p>
         </div>
       </div>
 
@@ -66,7 +66,7 @@ const Sidebar = () => {
                 </div>
 
                 <span
-                  className={`font-medium text-lg transition-all duration-300 ${
+                  className={`font-normal text-normal transition-all duration-300 ${
                     isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'
                   }`}
                 >
@@ -86,21 +86,21 @@ const Sidebar = () => {
 
         {/* Quick Stats */}
         <div className="mt-12 p-4 bg-slate-800 rounded-xl border border-slate-700">
-          <h3 className="text-sm font-normal text-slate-300 mb-3">
+          <h3 className="text-lg font-medium text-slate-300 mb-3">
             Quick Stats
           </h3>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-400">Total Books</span>
-              <span className="text-blue-400 font-medium">12,847</span>
+              <span className="font-medium text-slate-400">Total Books</span>
+              <span className=" font-medium text-blue-400 font-medium">12,847</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-400">Active Members</span>
-              <span className="text-purple-400 font-medium">3,421</span>
+              <span className="font-medium text-slate-400">Active Members</span>
+              <span className="font-medium text-purple-400 font-medium">3,421</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-400">Books Borrowed</span>
-              <span className="text-green-400 font-medium">847</span>
+              <span className="font-medium text-slate-400">Books Borrowed</span>
+              <span className="font-medium text-green-400 font-medium">847</span>
             </div>
           </div>
         </div>

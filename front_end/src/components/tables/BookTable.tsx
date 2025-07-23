@@ -3,13 +3,15 @@ import { Edit3, Trash2, User, Tag, BookOpen } from "lucide-react";
 
 interface BookDataProps {
   books: Book[];
+  onEdit :(book:Book) => void;
+  onDelete :(book:Book) => void;
 }
 
-const BookTable: React.FC<BookDataProps> = ({ books }) => {
+const BookTable: React.FC<BookDataProps> = ({ books,onEdit,onDelete }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-50 p-6">
+    <div className="min-h-screen   p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="backdrop-blur-sm bg-white/80 rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
+        <div className="backdrop-blur-sm bg-white rounded-2xl shadow-2xl  overflow-y-auto">
           <div className="h-[400px] overflow-y-auto">
             <table className="w-full">
               {/* Table Header */}
@@ -148,12 +150,14 @@ const BookTable: React.FC<BookDataProps> = ({ books }) => {
                       <td className="py-6 px-6">
                         <div className="flex items-center justify-center gap-2">
                           <button
+                            onClick={() => onEdit(book)}
                             className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 hover:text-blue-700 transition-all duration-200 hover:scale-105 group/btn"
                             title="Edit Book"
                           >
                             <Edit3 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
                           </button>
                           <button
+                            onClick={() => onDelete(book)}
                             className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700 transition-all duration-200 hover:scale-105 group/btn"
                             title="Delete Book"
                           >

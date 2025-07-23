@@ -4,7 +4,7 @@ import BookTable from '../components/tables/BookTable';
 import Dialog from "../components/Dialog"
 
 import { booksData } from '../data/data';
-import { add_book, getAllBooks, update_book } from '../service/bookService';
+import { add_book, delete_Books, getAllBooks, update_book } from '../service/bookService';
 import axios from 'axios';
 import  toast  from 'react-hot-toast';
 import BookForm from '../components/forms/BookForm';
@@ -64,12 +64,26 @@ export const ModernBookPage : React.FC = () => {
     setSelectedBook(null)
   }
 
+  const removeBook = async (id:string) => {
+    await delete_Books(id)
+  }
+
 
   const handleAddBook = () => {
     setSelectedBook(null)
     setIsAddDialogOpen(true)
   }
 
+  const handleEditBool = (book:Book) => {
+    setSelectedBook(book)  
+    setIsEditDialogOpen(true)  
+  }
+
+  
+  const handleDeleteBook = (book:Book) => {
+    setSelectedBook(book)
+    setIsDeleteDialogOpen(true)
+  }
 
  const handleFormSubmit = async (bookData: Omit<Book, "_id">) => {
   if (selectedBook) {
@@ -113,6 +127,38 @@ export const ModernBookPage : React.FC = () => {
 
   setSelectedBook(null);
 };
+
+
+const handleConfirmDelete = async() => {
+  
+  if(selectedBook){
+    
+    try{
+       await removeBook(selectedBook._id)
+       fetchBookData()
+       toast.success("Successfully Deleted!!")
+    }catch(error){
+         
+        if(axios.isAxiosError(error)) {
+          toast.error(error.message)
+        }else{
+          toast.error("Something went wrong")
+        }
+        
+    }finally{
+         setIsDeleteDialogOpen(false)
+         setSelectedBook(null)
+    }
+
+  }
+
+}
+
+
+
+
+
+
 
 if(isLoading){
    return (  <div
@@ -178,7 +224,7 @@ if(isLoading){
               <Plus className="w-5 h-5" />
                   Add New Book
              </button>
-            
+          {/*add dialog */}  
             <Dialog
               isOpen={isAddDialogOpen}
               onCancel={cancelDialog}
@@ -193,6 +239,35 @@ if(isLoading){
             >
               <BookForm onSubmit={handleFormSubmit} />
             </Dialog>
+
+
+          {/*edit dialog */}  
+          <Dialog
+            isOpen = {isEditDialogOpen}
+            onCancel={cancelDialog}
+
+            onConfirm={() => {
+              const form = document.querySelector("form") as HTMLFormElement
+
+              if(form){
+                form.requestSubmit()
+              }
+            }}
+          >
+             <BookForm book={selectedBook} onSubmit={handleFormSubmit}/>
+          </Dialog>
+
+          {/*delte */}
+          <Dialog 
+             isOpen = {isDeleteDialogOpen}
+             onCancel={cancelDialog}
+             onConfirm={handleConfirmDelete}
+          >
+              <p className='text-gray-700'>
+                  Are you sure you want to delete <strong>{selectedBook?.name}</strong>?This action cannot be undo
+              </p> 
+          </Dialog>
+
           </div>
         </div>
 
@@ -270,7 +345,7 @@ if(isLoading){
       {/* Table container with fixed height */}
        
             
-             <BookTable books={books} />
+             <BookTable books={books} onEdit={handleEditBool} onDelete={handleDeleteBook}/>
          
    
        
