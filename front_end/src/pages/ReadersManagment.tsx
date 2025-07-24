@@ -1,0 +1,190 @@
+import  { useEffect, useState } from 'react';
+import { Search, Filter, Plus, User, UserCheck, Trash2 } from 'lucide-react';
+
+
+
+import { add_readers, getAllReaders, update_reader } from '../service/readerService';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import ReaderTable from '../components/tables/ReaderTable';
+import type { Reader } from '../types/Reader';
+import { readerData } from '../data/data';
+import Dialog from '../components/Dialog';
+import  ReaderForm  from '../components/forms/ReaderForm';
+
+
+export const ModernReaderPage : React.FC = () => {
+
+  const[readers,setReaders] =  useState<Reader[]>(readerData);
+  const[isReadersLoading,setIsReadersLoading] =  useState<boolean>(false)
+  const[isAddDialogOpen , setIsAddDialogOpen] = useState(false)
+  const[isEditDialogOpen , setIsEditDialogOpen] = useState(false)
+  const [selectedReader ,setSelectedReader] = useState<Reader | null>(null)
+
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  
+  const fecthAllReaders = async()=>{
+       
+       try{
+         setIsReadersLoading(true)
+         const result =  await getAllReaders()
+         setReaders(result)
+       }catch(error){
+          
+           if(axios.isAxiosError(error)){
+            toast.error(error.message)
+           }else{
+            toast.error("Somthing went worng")
+           }
+         
+       }finally{
+          setIsReadersLoading(false)
+       }
+  }
+
+
+const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
+  try {
+    if (selectedReader) {
+      const response = await update_reader(selectedReader._id,  {
+        ...readerData,
+        status: selectedReader.status, 
+      });
+      const updatedReader = response.data;
+
+      setReaders((prev) =>
+        prev.map((reader) =>
+          reader._id === selectedReader._id ? updatedReader : reader
+        )
+      );
+      setIsEditDialogOpen(false);
+    } else {
+      const response = await add_readers(readerData);
+      const newReader = response.data; 
+      setReaders((prev) => [...prev, newReader]);
+      toast.success("Created successfully!");
+      setIsAddDialogOpen(false);
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error.message);
+    } else {
+      toast.error("Something went wrong");
+    }
+  }
+
+  setSelectedReader(null);
+};
+
+  useEffect(()=>{
+    fecthAllReaders()
+  })
+
+
+
+
+  function cancelDialog(): void {
+    throw new Error('Function not implemented.');
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+               <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">
+                 Readers Management
+              </h1>
+            <p className="text-gray-600 text-lg">Manage your library members and their preferences</p>
+          </div>
+
+
+             <button
+                onClick={() => setIsAddDialogOpen(true)}
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+                 >
+              <Plus className="w-5 h-5" />
+                  Add New Book
+             </button>
+            {/*add dialog */}  
+          
+           <Dialog
+              isOpen={isAddDialogOpen}
+              onCancel={cancelDialog}
+              onConfirm={() => {
+                const form = document.querySelector("form") as HTMLFormElement;
+                if (form) {
+                  form.requestSubmit();
+                }
+
+              } }
+              title='Add New Book'>
+            
+            <ReaderForm onSubmit={handleFormSubmit}/>
+            </Dialog>
+           
+          {/*edit dialog */}  
+         
+       
+
+          </div>
+        </div>
+
+        {/* Filters */}
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            
+            <input
+                type="text"
+                placeholder="Search readers by name, email, or phone..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+            
+            <div className="flex gap-4">
+              <select
+                  
+                className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white min-w-[120px]"
+              >
+                <option value="All">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              
+              
+                <button
+               
+                  className="px-4 py-3 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-colors flex items-center gap-2"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete ({})
+                </button>
+              
+            </div>
+          </div>
+        </div>
+
+       
+       <div className="backdrop-blur-sm bg-white/80 rounded-2xl shadow-2xl border border-white/30 overflow-y-auto">
+
+      {/* Table container with fixed height */}
+       
+            <ReaderTable readers={readers} />
+            
+         
+   
+       
+    </div>
+
+     
+      </div>
+    </div>
+  );
+}

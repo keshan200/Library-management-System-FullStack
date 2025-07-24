@@ -2,7 +2,6 @@ import  { useEffect, useState } from 'react';
 import { Search, Filter, Plus, User, UserCheck } from 'lucide-react';
 import BookTable from '../components/tables/BookTable';
 import Dialog from "../components/Dialog"
-
 import { booksData } from '../data/data';
 import { add_book, delete_Books, getAllBooks, update_book } from '../service/bookService';
 import axios from 'axios';
@@ -15,14 +14,10 @@ export const ModernBookPage : React.FC = () => {
    
   const [books ,setBooks] = useState<Book[]>(booksData)
   const [isLoading ,setIsLoading] = useState<boolean>(false)
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
-
-
-
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAuthor, setSelectedAuthor] = useState('All');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -68,11 +63,6 @@ export const ModernBookPage : React.FC = () => {
     await delete_Books(id)
   }
 
-
-  const handleAddBook = () => {
-    setSelectedBook(null)
-    setIsAddDialogOpen(true)
-  }
 
   const handleEditBool = (book:Book) => {
     setSelectedBook(book)  
@@ -225,7 +215,7 @@ if(isLoading){
                   Add New Book
              </button>
           {/*add dialog */}  
-            <Dialog
+           <Dialog
               isOpen={isAddDialogOpen}
               onCancel={cancelDialog}
               onConfirm={ () => {
@@ -238,7 +228,7 @@ if(isLoading){
              title='Add New Book'
             >
               <BookForm onSubmit={handleFormSubmit} />
-            </Dialog>
+          </Dialog>
 
 
           {/*edit dialog */}  

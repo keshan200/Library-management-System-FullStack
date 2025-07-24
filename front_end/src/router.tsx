@@ -3,9 +3,11 @@ import Login from "./pages/LoginPage";
 import Layout from "./pages/Layout";
 import Dashboard from "./pages/Dashboard";
 import AdminRoutes from "./pages/AdminRoutes";
-import BookForm from "./components/forms/BookForm";
-import ModernBookTable from "./components/tables/BookTable";
+
 import{ ModernBookPage} from "./pages/BookManagment";
+
+import { ModernReaderPage } from "./pages/ReadersManagment";
+
 
 
 
@@ -24,6 +26,7 @@ const router = createBrowserRouter([
          children:[
           {path:"/dashboard", element: <Dashboard />},
           {path:"/books", element: <ModernBookPage />},
+          {path:"/members",element :<ModernReaderPage />}
           
          ]
 
