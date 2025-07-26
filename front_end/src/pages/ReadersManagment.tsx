@@ -16,10 +16,16 @@ import  ReaderForm  from '../components/forms/ReaderForm';
 export const ModernReaderPage : React.FC = () => {
 
   const[readers,setReaders] =  useState<Reader[]>(readerData);
+  const [searchTerms, setSearchTerms] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'All' | 'Active' | 'Inactive'>('All');
+
   const[isReadersLoading,setIsReadersLoading] =  useState<boolean>(false)
   const[isAddDialogOpen , setIsAddDialogOpen] = useState(false)
   const[isEditDialogOpen , setIsEditDialogOpen] = useState(false)
   const [selectedReader ,setSelectedReader] = useState<Reader | null>(null)
+
+
+
 
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -52,6 +58,7 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
         status: selectedReader.status, 
       });
       const updatedReader = response.data;
+      toast.success("updated successfully!");
 
       setReaders((prev) =>
         prev.map((reader) =>
@@ -81,6 +88,17 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
     fecthAllReaders()
   })
 
+  const handleEditReader = (reader:Reader) =>{
+      setSelectedReader(reader)
+      setIsEditDialogOpen(true)
+  }
+
+
+
+  
+
+
+
 
 
 
@@ -92,7 +110,7 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+      <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
                <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">
@@ -109,7 +127,7 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
               <Plus className="w-5 h-5" />
                   Add New Book
              </button>
-            {/*add dialog */}  
+          
           
            <Dialog
               isOpen={isAddDialogOpen}
@@ -126,8 +144,20 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
             <ReaderForm onSubmit={handleFormSubmit}/>
             </Dialog>
            
-          {/*edit dialog */}  
-         
+          {/*edit dialog */}
+            <Dialog
+             isOpen={isEditDialogOpen}
+             onCancel={cancelDialog}
+             onConfirm={() => {
+              const form = document.querySelector("form") as HTMLFormElement
+              if(form){
+                form.requestSubmit()
+              }
+             }}
+
+            >
+               <ReaderForm reader={selectedReader} onSubmit={handleFormSubmit} />
+            </Dialog>
        
 
           </div>
@@ -172,11 +202,16 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
         </div>
 
        
-       <div className="backdrop-blur-sm bg-white/80 rounded-2xl shadow-2xl border border-white/30 overflow-y-auto">
+       <div className="backdrop-blur-sm bg-white/80 rounded-2xl shadow-2xl border border-white/30 overflow-y-auto mt-10">
 
       {/* Table container with fixed height */}
        
-            <ReaderTable readers={readers} />
+            <ReaderTable 
+            readers={readers}
+            searchTerm={searchTerm} 
+            statusFilter={statusFilter}
+            onEdit={handleEditReader}
+            />
             
          
    

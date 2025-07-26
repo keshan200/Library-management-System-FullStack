@@ -36,7 +36,7 @@ export const add_readers =  async (reader:ReaderFormData) => {
 
 
 export const update_reader =  async (_id:string,readerData:Omit<Reader,"_id">) =>{
-    const Response = await apiClient.put(`${READER_URL}/update`,readerData)
+    const Response = await apiClient.put(`${READER_URL}/update/${_id}`,readerData)
     return Response
 
 }

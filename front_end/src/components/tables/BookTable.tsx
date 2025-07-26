@@ -5,6 +5,8 @@ interface BookDataProps {
   books: Book[];
   onEdit :(book:Book) => void;
   onDelete :(book:Book) => void;
+
+  
 }
 
 const BookTable: React.FC<BookDataProps> = ({ books,onEdit,onDelete }) => {

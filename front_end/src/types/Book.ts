@@ -10,7 +10,7 @@ export interface Book {
 }
 
 export type BookFromData = {
-     name: string;          
+  name: string;          
   coverImg: string | File;     
   author: string;       
   category: string;     

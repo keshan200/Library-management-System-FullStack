@@ -1,6 +1,6 @@
 export interface Reader{
   _id:string
-  coverImg:string
+  coverImg:string | File
   firstName:string
   lastName:string
   email:string
@@ -11,10 +11,11 @@ export interface Reader{
 
 
 export type ReaderFormData = {
-    coverImg:string
+    coverImg:string | File
     firstName:string
     lastName:string
     email:string
     phone:string
     address:string
+    
 }

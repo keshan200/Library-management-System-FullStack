@@ -20,8 +20,8 @@ const BookForm = ({ book, onSubmit }: BookFormProps) => {
   const [formData, setFormData] = useState<BookFromData>({
     name: "",
     author: "",
-    category: "",
-    coverImg: "", // can be string or File
+    category: '',
+    coverImg: '',
     totalBooks: 0,
     availableBooks: 0,
   });
@@ -34,7 +34,7 @@ const BookForm = ({ book, onSubmit }: BookFormProps) => {
         name: book.name,
         author: book.author,
         category: book.category,
-        coverImg: book.coverImg, // existing image URL
+        coverImg: book.coverImg, 
         totalBooks: book.totalBooks,
         availableBooks: book.availableBooks,
       });

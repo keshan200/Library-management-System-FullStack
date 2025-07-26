@@ -1,21 +1,26 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/useAuth";
 
 const Layout = () => {
-  const location = useLocation();
+ const {isAuthenticating,isLoggedIn} = useAuth()
 
-  
-  const hideNavbarRoutes = ["/"];
 
-  const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
+
+ if(isAuthenticating)return<div>Loading........</div>
+
+  const hideNavbar = location.pathname === "/" || location.pathname === "/login";
+
 
   return (
     <div className="h-screen overflow-hidden">
-      {shouldShowNavbar && (
+     
+       {!hideNavbar && isLoggedIn &&(
         <div>
           <Navbar />
         </div>
       )}
+      
 
       <main className="h-full overflow-y-auto">
         <Outlet />

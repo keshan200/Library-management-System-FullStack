@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   BarChart3, 
@@ -8,9 +7,14 @@ import {
   History
 } from 'lucide-react';
 
+
+
+
+
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
 
   const menuItems = [
     { name: 'Dashboard', path: '/dashboard', icon: BarChart3, color: 'text-blue-400' },
@@ -22,7 +26,15 @@ const Sidebar = () => {
 
   const handleItemClick = (path: string) => {
     navigate(path);
-  };
+  }
+  
+
+
+
+
+
+
+
 
   return (
     <main className="bg-white w-80 h-screen flex flex-col  overflow-hidden">

@@ -1,21 +1,32 @@
 import { Outlet } from "react-router-dom"
 import Sidebar from "../components/SideBar"
+import { useAuth } from "../context/useAuth"
 
 
 const AdminRoutes =  () => {
     
+ const {isLoggedIn,isAuthenticating} = useAuth()
+ 
+ if(isAuthenticating)return<div>Loading........</div>
+
     return(
+        
        <div className = 'flex h-screen overflow-hidden'>
-           
-           <div className = 'flex-shirnk-0'>
-                <Sidebar />
-           </div>
+           {isLoggedIn ? (
+        <>
+          <div className='flex-shrink-0'>
+            <Sidebar />
+          </div>
 
-           <div className = 'flex-1 overflow-y-auto bg-gray-50'>
-                <Outlet />
-           </div>
-           
-
+          <div className='flex-1 overflow-y-auto bg-gray-50'>
+            <Outlet />
+          </div>
+        </>
+      ) : (
+        <div className="w-full h-full flex justify-center items-center">
+          <p>Unauthorized. Please login first.</p>
+        </div>
+      )}
        </div>
     )
 

@@ -1,8 +1,25 @@
-import { Bell, Book, LogOut, Search } from "lucide-react";
+import axios from "axios";
+import { Bell, Book, ChevronDown, LogOut, Search, Settings, User } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useAuth } from "../context/useAuth";
+import { logout } from "../service/authService";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
+   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const {isLoggedIn ,logout:unauthenticate} = useAuth()
+  const[isLoading ,setIsLoading] =useState(false)
+  const navigate = useNavigate();
+
+  // Mock user data
+  const currentUser = {
+    name: 'Kasun Perera',
+    email: 'kasun.perera@library.com',
+    role: 'Librarian',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+  };
 
   // Mock data for overdue books count
   const overdueBooks = [
@@ -11,6 +28,29 @@ const Navbar = () => {
     { readerName: 'Thilini Perera', bookTitle: 'Pride and Prejudice', daysOverdue: 5, email: 'thilini.p@email.com', avatar: 'TP' },
     { readerName: 'Dinesh Silva', bookTitle: 'The Great Gatsby', daysOverdue: 3, email: 'dinesh.s@email.com', avatar: 'DS' }
   ];
+
+
+const handleLogout = async() => {
+    setIsLoading(true)
+
+    try{
+      await logout()
+      toast.success("Logout Successfull!")
+      unauthenticate()
+      navigate("/login")
+
+      console.log("log ekat awa")
+    }catch(error:any){
+      if(axios .isAxiosError(error)){
+        toast.error(error.message)
+      }else{
+        toast.error("somthing went wrong")
+      }
+    }finally{
+        setIsLoading(false)
+    }
+
+  }
 
   return (
     <nav className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 shadow-2xl w-screen">
@@ -49,11 +89,75 @@ const Navbar = () => {
                     {overdueBooks.length}
                   </span>
                 </button>
-                
-                {/* Logout */}
-                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors">
-                  <LogOut className="w-6 h-6" />
-                </button>
+
+                  {/* User Profile Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-xl transition-colors"
+                  >
+                    <img
+                      src={currentUser.avatar}
+                      alt={currentUser.name}
+                      className="w-8 h-8 rounded-full object-cover border-2 border-blue-200"
+                    />
+                    <div className="text-left hidden md:block">
+                      <p className="text-sm font-medium text-gray-800">{currentUser.name}</p>
+                      <p className="text-xs text-gray-600">{currentUser.role}</p>
+                    </div>
+                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  
+                  {/* Dropdown Menu */}
+                  {isProfileOpen && (
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
+                      {/* User Info */}
+                      <div className="px-4 py-3 border-b border-gray-100">
+                        <div className="flex items-center space-x-3">
+                          <img
+                            src={currentUser.avatar}
+                            alt={currentUser.name}
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
+                          <div>
+                            <p className="font-medium text-gray-800">{currentUser.name}</p>
+                            <p className="text-sm text-gray-600">{currentUser.email}</p>
+                            <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full mt-1">
+                              {currentUser.role}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Menu Items */}
+                      <div className="py-2">
+                        <button className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3 text-gray-700">
+                          <User className="w-4 h-4" />
+                          <span>View Profile</span>
+                        </button>
+                        <button className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3 text-gray-700">
+                          <Settings className="w-4 h-4" />
+                          <span>Settings</span>
+                        </button>
+                      </div>
+                      
+                      {/* Logout */}
+
+                     
+                      <div className="border-t border-gray-100 pt-2">
+                         {isLoggedIn && (
+                        <button 
+                         disabled={isLoading}
+                         onClick={handleLogout}
+                        className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3 text-red-600">
+                          <LogOut className="w-4 h-4" />
+                          <span>Sign Out</span>
+                        </button>
+                         )}
+                      </div>
+                    </div>
+                  )}
+              </div>
               </div>
             </div>
           </div>
