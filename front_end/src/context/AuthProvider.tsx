@@ -2,6 +2,10 @@ import { useEffect, useState } from "react"
 import apiClient, { setHeader } from "../service/apiClient"
 import router from "../router"
 import { AuthContext } from "./AuthContext"
+import type { User } from "../types/User"
+
+
+
 
 interface AuthProviderProps{
    children :React.ReactNode
@@ -13,6 +17,7 @@ export const AuthProvider  = ({children}:AuthProviderProps) => {
    const [isLoggedIn , setIsLoggedIn] = useState<boolean>(false)
    const [accessToken , setAccessToken] =  useState<string>("")
    const [isAuthenticating , setIsAuthenticating] =  useState<boolean>(true)
+   const [user, setUser] = useState<User | null>(null)
    
 
    const login  =  (token:string) => {
@@ -35,6 +40,7 @@ export const AuthProvider  = ({children}:AuthProviderProps) => {
             const result =  await apiClient .post("/auth/refresh-token")
             setAccessToken(result.data.accessToken)
             setIsLoggedIn(true)
+            setUser(result.data.user);
 
             const currentPath = window.location.pathname
 
@@ -55,6 +61,6 @@ export const AuthProvider  = ({children}:AuthProviderProps) => {
    },[])
 
 
-    return<AuthContext.Provider value={{isLoggedIn,login,logout,isAuthenticating}}>{children}</AuthContext.Provider>
+    return<AuthContext.Provider value={{isLoggedIn,login,logout,isAuthenticating,user,setUser}}>{children}</AuthContext.Provider>
 
 }

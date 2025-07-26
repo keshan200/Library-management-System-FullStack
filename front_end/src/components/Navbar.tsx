@@ -9,17 +9,21 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
    const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const {isLoggedIn ,logout:unauthenticate} = useAuth()
+  const {isLoggedIn ,logout:unauthenticate,user} = useAuth()
   const[isLoading ,setIsLoading] =useState(false)
   const navigate = useNavigate();
 
-  // Mock user data
+  
+
+
   const currentUser = {
-    name: 'Kasun Perera',
-    email: 'kasun.perera@library.com',
-    role: 'Librarian',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+    name: `${user?.first_name} ${user?.last_name}`,
+    email: user?.email,
+    role: user?.role,
+    avatar:`http://localhost:3000/${user?.img}`
   };
+
+ console.log("currect user",currentUser)
 
   // Mock data for overdue books count
   const overdueBooks = [
@@ -99,11 +103,17 @@ const handleLogout = async() => {
                     <img
                       src={currentUser.avatar}
                       alt={currentUser.name}
-                      className="w-8 h-8 rounded-full object-cover border-2 border-blue-200"
+                      className="w-12 h-12 rounded-full object-cover border-2 border-blue-200"
                     />
                     <div className="text-left hidden md:block">
-                      <p className="text-sm font-medium text-gray-800">{currentUser.name}</p>
-                      <p className="text-xs text-gray-600">{currentUser.role}</p>
+                      <p className="text-normal font-medium text-gray-800">{currentUser.name}</p>
+                     <span
+                          className={`inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full mt-1 
+                          ${currentUser.role === "ADMIN" ? "bg-blue-100 text-blue-800" : ""}
+                          ${currentUser.role === "STAFF" ? "bg-green-100 text-green-800" : ""}`}
+                         >
+                      {currentUser.role}
+                     </span>
                     </div>
                     <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
                   </button>

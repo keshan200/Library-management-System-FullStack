@@ -36,14 +36,24 @@ const ReaderTable: React.FC<ReaderTableProps> = ({ readers, onEdit, onDeleteSing
   return (
     <div className="overflow-x-auto shadow border border-gray-200 rounded-lg ">
       <table className="min-w-full text-sm text-left text-gray-600 bg-white">
-        <thead className="text-xs text-white  uppercase  bg-gradient-to-r from-blue-900 via-blue-900 to-indigo-900">
+        <thead className="text-normal text-white  uppercase  bg-gradient-to-r from-blue-900 via-blue-900 to-indigo-900">
           <tr>
-            <th className="px-4 py-3">Photo</th>
-            <th className="px-4 py-3">Name</th>
-            <th className="px-4 py-3">Email</th>
-            <th className="px-4 py-3">Phone</th>
-            <th className="px-4 py-3">Status</th>
-            <th className="px-4 py-3 ">Actions</th>
+            <th className="px-4 py-3 font-semibold ">Photo</th>
+
+
+            <th className="px-4 py-3 font-semibold ">Name</th>
+
+
+            <th className="px-4 py-3 font-semibold ">Email</th>
+
+
+            <th className="px-4 py-3 font-semibold ">Phone</th>
+
+
+            <th className="px-4 py-3 font-semibold ">Status</th>
+
+
+            <th className="px-4 py-3 font-semibold ">Actions</th>
           </tr>
         </thead>
        <tbody>

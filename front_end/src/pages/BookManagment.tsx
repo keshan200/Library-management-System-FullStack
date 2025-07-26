@@ -166,7 +166,7 @@ if(isLoading){
           width: '50px',
           height: '50px',
           border: '5px solid #ccc',
-          borderTop: '5px solid rgb(79, 22, 250)',
+          borderTop: '5px solid rgba(30, 17, 221, 1)',
           borderRadius: '50%',
           animation: 'spin 1s linear infinite',
         }}
@@ -175,7 +175,7 @@ if(isLoading){
         style={{
           marginTop: '20px',
           fontSize: '18px',
-          color: 'rgb(79, 22, 250)',
+          color: '5px solid rgba(30, 17, 221, 1)',
           fontFamily: 'Arial, sans-serif',
         }}
       >

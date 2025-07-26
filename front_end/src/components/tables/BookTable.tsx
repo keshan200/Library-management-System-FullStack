@@ -11,7 +11,7 @@ interface BookDataProps {
 
 const BookTable: React.FC<BookDataProps> = ({ books,onEdit,onDelete }) => {
   return (
-    <div className="min-h-screen   p-6">
+    
       <div className="max-w-7xl mx-auto">
         <div className="backdrop-blur-sm bg-white rounded-2xl shadow-2xl  overflow-y-auto">
           <div className="h-[400px] overflow-y-auto">
@@ -93,7 +93,7 @@ const BookTable: React.FC<BookDataProps> = ({ books,onEdit,onDelete }) => {
                             <div className="absolute inset-0  from-black/10 to-transparent rounded-lg"></div>
                           </div>
                           <div className="min-w-0">
-                            <h3 className="font-normal text-slate-900 text-lg truncate">
+                            <h3 className="font-normal text-slate-900 text-medium truncate">
                               {book.name}
                             </h3>
                           </div>
@@ -113,9 +113,9 @@ const BookTable: React.FC<BookDataProps> = ({ books,onEdit,onDelete }) => {
                       </td>
 
                       {/* Inventory */}
-                      <td className="py-6 px-6">
+                      <td className="py-7 px-6">
                         <div className="space-y-2">
-                          <span className="text-slate-900 font-normal text-lg">
+                          <span className="text-slate-900 font-normal text-medium">
                             {book.totalBooks}
                           </span>
                         </div>
@@ -175,7 +175,7 @@ const BookTable: React.FC<BookDataProps> = ({ books,onEdit,onDelete }) => {
           </div>
         </div>
       </div>
-    </div>
+   
   );
 };
 

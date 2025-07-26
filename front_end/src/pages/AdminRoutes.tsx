@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom"
 import Sidebar from "../components/SideBar"
 import { useAuth } from "../context/useAuth"
+import UnauthorizedPage from "../components/unathorizes"
 
 
 const AdminRoutes =  () => {
@@ -24,7 +25,7 @@ const AdminRoutes =  () => {
         </>
       ) : (
         <div className="w-full h-full flex justify-center items-center">
-          <p>Unauthorized. Please login first.</p>
+          <UnauthorizedPage/>
         </div>
       )}
        </div>
