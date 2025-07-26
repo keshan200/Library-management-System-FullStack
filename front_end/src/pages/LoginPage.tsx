@@ -5,6 +5,7 @@ import { useAuth } from "../context/useAuth";
 import { login } from "../service/authService";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import LibraryLoading from "../components/LoadingAnime";
 
 
 
@@ -55,7 +56,9 @@ const Login = () => {
 
   return Object.keys(newErrors).length === 0;
   }
-
+  if(isLoading){
+    return <LibraryLoading />
+  }
 
 
   const handleSubmit = async (e:React.FormEvent) =>  {
@@ -67,8 +70,10 @@ const Login = () => {
       try{
         const user =  await login(formData)
         toast.success(`Welcome ,${user.first_name} ${user.last_name}`)
+        setIsLoading(true)
         authuenticate(user.AccessToken)
-        navigate("/dashboard")
+        setIsLoading(true)
+          navigate("/dashboard")
       }catch(error:any){
         
         if(axios.isAxiosError(error)){

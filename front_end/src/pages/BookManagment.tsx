@@ -8,6 +8,7 @@ import axios from 'axios';
 import  toast  from 'react-hot-toast';
 import BookForm from '../components/forms/BookForm';
 import type { Book } from '../types/Book';
+import LibraryLoading from '../components/LoadingAnime';
 
 
 export const ModernBookPage : React.FC = () => {
@@ -151,45 +152,8 @@ const handleConfirmDelete = async() => {
 
 
 if(isLoading){
-   return (  <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        backgroundColor: '#f5f5f5',
-      }}
-    >
-      <div
-        style={{
-          width: '50px',
-          height: '50px',
-          border: '5px solid #ccc',
-          borderTop: '5px solid rgba(30, 17, 221, 1)',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-        }}
-      ></div>
-      <p
-        style={{
-          marginTop: '20px',
-          fontSize: '18px',
-          color: '5px solid rgba(30, 17, 221, 1)',
-          fontFamily: 'Arial, sans-serif',
-        }}
-      >
-        Loading...
-      </p>
-      <style>
-        {` 
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
-    </div>);
+   return <LibraryLoading />
+
 }
 
 

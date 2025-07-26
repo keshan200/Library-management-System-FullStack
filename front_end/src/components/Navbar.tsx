@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Bell, Book, ChevronDown, LogOut, Search, Settings, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/useAuth";
 import { logout } from "../service/authService";
@@ -55,6 +55,11 @@ const handleLogout = async() => {
     }
 
   }
+
+
+  useEffect(()=>{
+   
+  },[])
 
   return (
     <nav className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 shadow-2xl w-screen">
@@ -145,7 +150,9 @@ const handleLogout = async() => {
                           <User className="w-4 h-4" />
                           <span>View Profile</span>
                         </button>
-                        <button className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3 text-gray-700">
+                        <button
+                        onClick={() => navigate("/setting")}
+                        className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3 text-gray-700">
                           <Settings className="w-4 h-4" />
                           <span>Settings</span>
                         </button>

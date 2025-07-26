@@ -12,7 +12,7 @@ interface ReaderTableProps {
   statusFilter?: 'All' | 'Active' | 'Inactive';
 }
 
-const ReaderTable: React.FC<ReaderTableProps> = ({ readers, onEdit, onDeleteSingle  ,searchTerm,statusFilter}) => {
+const ReaderTable: React.FC<ReaderTableProps> = ({ readers, onEdit  ,searchTerm,statusFilter}) => {
  
  
  const filteredReaders = readers.filter((reader) => {

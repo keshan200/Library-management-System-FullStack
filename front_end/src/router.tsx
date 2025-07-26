@@ -7,6 +7,7 @@ import AdminRoutes from "./pages/AdminRoutes";
 import{ ModernBookPage} from "./pages/BookManagment";
 
 import { ModernReaderPage } from "./pages/ReadersManagment";
+import SettingsPage from "./pages/SettingPage";
 
 
 
@@ -26,7 +27,8 @@ const router = createBrowserRouter([
          children:[
           {path:"/dashboard", element: <Dashboard />},
           {path:"/books", element: <ModernBookPage />},
-          {path:"/members",element :<ModernReaderPage />}
+          {path:"/members",element :<ModernReaderPage />},
+          {path:"/setting",element : <SettingsPage />}
           
          ]
 

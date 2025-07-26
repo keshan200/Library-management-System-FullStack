@@ -11,6 +11,7 @@ import type { Reader } from '../types/Reader';
 import { readerData } from '../data/data';
 import Dialog from '../components/Dialog';
 import  ReaderForm  from '../components/forms/ReaderForm';
+import LibraryLoading from '../components/LoadingAnime';
 
 
 export const ModernReaderPage : React.FC = () => {
@@ -104,46 +105,9 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
 
 
   if(isReadersLoading){
-   return (  <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        backgroundColor: '#f5f5f5',
-      }}
-    >
-      <div
-        style={{
-          width: '50px',
-          height: '50px',
-          border: '5px solid #ccc',
-          borderTop: '5px solid rgba(63, 63, 63, 1)',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-        }}
-      ></div>
-      <p
-        style={{
-          marginTop: '20px',
-          fontSize: '18px',
-          color: 'rgba(116, 116, 116, 1)',
-          fontFamily: 'Arial, sans-serif',
-        }}
-      >
-        Loading...
-      </p>
-      <style>
-        {` 
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
-    </div>);
-}
+   return <LibraryLoading />
+     
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">

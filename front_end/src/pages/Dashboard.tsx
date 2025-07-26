@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { 
   Search, 
   Book, 
@@ -17,9 +17,11 @@ import {
  
   MoreHorizontal
 } from 'lucide-react';
+import LibraryLoading from '../components/LoadingAnime';
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading ,setIsLoading]=useState(false) 
 
   // Mock data
   const stats = {
@@ -96,6 +98,14 @@ const Dashboard = () => {
       {initials}
     </div>
   );
+
+  
+  if(isLoading){
+    return <LibraryLoading />
+  }
+
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">

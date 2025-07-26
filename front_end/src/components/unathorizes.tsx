@@ -1,4 +1,4 @@
-import { Lock, ArrowRight, Shield, User, Building } from "lucide-react";
+import { Lock, ArrowRight,  User } from "lucide-react";
 
 export default function UnauthorizedPage() {
   return (
