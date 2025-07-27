@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Bell, Book, ChevronDown, LogOut, Search, Settings, User } from "lucide-react";
+import { Bell, Book, ChevronDown, Crown, LogOut, Search, Settings, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/useAuth";
@@ -58,8 +58,8 @@ const handleLogout = async() => {
 
 
   useEffect(()=>{
-   
-  },[])
+   currentUser
+  },[user])
 
   return (
     <nav className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 shadow-2xl w-screen">
@@ -77,6 +77,8 @@ const handleLogout = async() => {
                   <p className="text-gray-600">Management Dashboard</p>
                 </div>
               </div>
+             
+            
               
               {/* Search and Actions */}
               <div className="flex items-center space-x-4">
@@ -99,6 +101,11 @@ const handleLogout = async() => {
                   </span>
                 </button>
 
+                 <div className="flex items-center gap-2 bg-yellow-100 text-yellow-700 px-4 py-2 rounded-full text-sm font-medium">
+                  <Crown className="w-4 h-4" />
+                  <span>Admin Access</span>
+                 </div>
+
                   {/* User Profile Dropdown */}
                 <div className="relative">
                   <button
@@ -114,8 +121,11 @@ const handleLogout = async() => {
                       <p className="text-normal font-medium text-gray-800">{currentUser.name}</p>
                      <span
                           className={`inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full mt-1 
-                          ${currentUser.role === "ADMIN" ? "bg-blue-100 text-blue-800" : ""}
-                          ${currentUser.role === "STAFF" ? "bg-green-100 text-green-800" : ""}`}
+                          ${currentUser.role === "admin" ? "bg-blue-100 text-blue-800" : ""}
+
+
+
+                          ${currentUser.role === "staff" ? "bg-green-100 text-green-800" : ""}`}
                          >
                       {currentUser.role}
                      </span>

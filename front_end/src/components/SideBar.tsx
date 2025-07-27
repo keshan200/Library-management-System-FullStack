@@ -21,7 +21,8 @@ const Sidebar = () => {
     { name: 'Books', path: '/books', icon: BookOpen, color: 'text-green-400' },
     { name: 'Members', path: '/members', icon: Users, color: 'text-purple-400' },
     { name: 'Lending', path: '/lending', icon: BookMarked, color: 'text-blue-500' },
-    { name: 'History', path: '/history', icon: History, color: 'text-gray-400' }
+    { name: 'History', path: '/history', icon: History, color: 'text-gray-400' },
+  
   ];
 
   const handleItemClick = (path: string) => {

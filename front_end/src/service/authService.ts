@@ -1,4 +1,3 @@
-import type { User } from "../types/User"
 import apiClient, { BASE_URL } from "./apiClient"
 
 const AUTH_URL = `${BASE_URL}/auth`
@@ -28,10 +27,6 @@ export interface LogoutResponse{
 }
 
 
-export const signup =  async (userData :User):Promise<SignUpResponse> => {
-  const response = await apiClient.post(`${AUTH_URL}/signup`,userData)
-  return response.data
-}
 
 
 export const login = async (loginData: { email: string; password: string }): Promise<LoginResponse> => {

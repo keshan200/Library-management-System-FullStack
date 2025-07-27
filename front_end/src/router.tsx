@@ -8,6 +8,9 @@ import{ ModernBookPage} from "./pages/BookManagment";
 
 import { ModernReaderPage } from "./pages/ReadersManagment";
 import SettingsPage from "./pages/SettingPage";
+import ViewAllUsersPage from "./pages/UserSignUp";
+
+
 
 
 
@@ -28,7 +31,9 @@ const router = createBrowserRouter([
           {path:"/dashboard", element: <Dashboard />},
           {path:"/books", element: <ModernBookPage />},
           {path:"/members",element :<ModernReaderPage />},
-          {path:"/setting",element : <SettingsPage />}
+          {path:"/setting",element : <SettingsPage />},
+          {path:"/lending" , element:<ViewAllUsersPage />}
+
           
          ]
 
