@@ -35,7 +35,7 @@ export const ModernReaderPage : React.FC = () => {
        
        try{
         
-        setIsReadersLoading(true)
+         setIsReadersLoading(true)
          const result =  await getAllReaders()
          setReaders(result)
        }catch(error){

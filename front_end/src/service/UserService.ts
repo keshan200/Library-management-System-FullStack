@@ -1,4 +1,4 @@
-import type { User } from "../types/User"
+import type { User, UserFormData } from "../types/User"
 import apiClient, { BASE_URL } from "./apiClient"
 
 
@@ -7,13 +7,6 @@ import apiClient, { BASE_URL } from "./apiClient"
 const AUTH_URL = `${BASE_URL}/auth`
 
 
-
-export interface SignUpResponse{
-    name:string
-    coverImg : string
-    email : string
-    _id : string
-}
 
 
 
@@ -28,7 +21,7 @@ export const getAllUsers = async():Promise<User[]> => {
 }
 
 
-export const signup =  async (userData :User):Promise<SignUpResponse> => {
+export const signup =  async (userData :UserFormData) => {
 
   const formData = new FormData();
 
@@ -37,7 +30,7 @@ export const signup =  async (userData :User):Promise<SignUpResponse> => {
   formData.append("last_name", userData.last_name);
   formData.append("email", userData.email);
   formData.append("password", userData.password);
-  formData.append("phone", userData.phone);
+  formData.append("mobile", userData.mobile);
   formData.append("role", userData.role);
 
 

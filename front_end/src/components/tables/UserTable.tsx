@@ -17,7 +17,7 @@ const filteredUsers = user.filter((u) => {
           u.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           u.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           u.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          u.phone?.toLowerCase().includes(searchTerm.toLowerCase())
+          u.mobile?.toLowerCase().includes(searchTerm.toLowerCase())
         )
       : true
 
@@ -66,7 +66,7 @@ const filteredUsers = user.filter((u) => {
 
          <tbody className="divide-y divide-gray-200">
                   {filteredUsers.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50/50 transition-colors">
+                    <tr key={user._id} className="hover:bg-gray-50/50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <img
@@ -78,13 +78,13 @@ const filteredUsers = user.filter((u) => {
                             <div className="font-semibold text-gray-900">
                               {user.first_name} {user.last_name}
                             </div>
-                            <div className="text-sm text-gray-500">ID: {user.id}</div>
+                            <div className="text-sm text-gray-500">ID: {user._id}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">{user.email}</div>
-                        <div className="text-sm text-gray-500">{user.phone}</div>
+                        <div className="text-sm text-gray-500">{user.mobile}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${

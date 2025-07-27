@@ -1,34 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { User, Mail, Phone, MapPin, Camera, Lock, Shield } from 'lucide-react';
+import { Users, Mail, Phone, MapPin, Camera, Lock, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
+import type { User, UserFormData } from '../../types/User';
 
-interface User {
-  _id?: string;
-  first_name: string;
-  last_name: string;
-  img: string;
-  email: string;
-  password?: string;
-  mobile: string;
-  createAt?: Date;
-  role: "admin" | "staff";
-  status: "Active" | "Inactive";
-}
 
-interface UserFormData {
-  first_name: string;
-  last_name: string;
-  img: string | File;
-  email: string;
-  password: string;
-  mobile: string;
-  role: "admin" | "staff";
-  status: "Active" | "Inactive";
-}
 
 interface UserFormProps {
-  user?: User | null;
-  onSubmit: (userData: Omit<User, "_id" | "createAt">) => void;
+  user?:User | null;
+  onSubmit: (userData: Omit<User, "_id">) => void
   isEditMode?: boolean;
 }
 
@@ -41,7 +20,9 @@ interface FormErrors {
   img?: string;
 }
 
-const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
+const UserForm = ({ user,onSubmit,isEditMode }:UserFormProps) => {
+
+
   const [formData, setFormData] = useState<UserFormData>({
     first_name: '',
     last_name: '',
@@ -49,32 +30,30 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
     email: '',
     password: '',
     mobile: '',
-    role: 'staff',
+    role: "staff",
     status: 'Active',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        first_name: user.first_name,
-        last_name: user.last_name,
-        img: user.img,
-        email: user.email,
-        password: '', 
-        mobile: user.mobile,
-        role: user.role,
-        status: user.status,
-      });
-      
-     
-      if (user.img) {
-        setImagePreview(user.img);
-      }
-    }
-  }, [user]);
+
+useEffect(() => {
+  if (user) {
+    setFormData({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      img: user.img,
+      email: user.email,
+      password: user.password,
+      mobile: user.mobile,
+      role: user.role,
+      status: user.status,
+    });
+  }
+}, [user]);
+
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -129,13 +108,7 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
-    
-    if (!isEditMode && !formData.password.trim()) {
-      newErrors.password = "Password is required";
-    } else if (formData.password && formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-    
+ 
     if (!formData.mobile.trim()) {
       newErrors.mobile = "Mobile number is required";
     }
@@ -144,18 +117,6 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      const submitData = { ...formData };
-      if (isEditMode && !submitData.password) {
-        delete (submitData as any).password;
-      }
-     
-    } else {
-      toast.error("Please fix validation errors.");
-    }
-  };
 
   const handleCancel = () => {
     setFormData({
@@ -172,6 +133,21 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
     setErrors({});
   };
 
+
+ const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(formData)
+    if (validateForm()) {
+      onSubmit(formData);
+    } else {
+      toast.error("Please fix validation errors.");
+    }
+  };
+
+
+
+
+
   return (
     <div className="bg-gradient-to-br from-violet-50 via-blue-50 to-cyan-50 p-3">
       <div className="max-w-xl mx-auto">
@@ -179,16 +155,16 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            {isEditMode ? 'Update User' : 'User Registration'}
+         
           </h2>
           <p className="text-gray-600 text-sm">
-            {isEditMode ? 'Update user information' : 'Create a new user account'}
+          
           </p>
         </div>
        
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6">
           
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form  className="space-y-4" onSubmit={handleSubmit}>
             
             {/* Profile Image */}
             <div className="flex justify-center mb-6">
@@ -239,7 +215,7 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
             <div className="grid grid-cols-2 gap-3">
               <div className="relative">
                 <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
-                  <User className="w-3 h-3 mr-1 text-blue-500" />
+                  <Users className="w-3 h-3 mr-1 text-blue-500" />
                   First Name
                 </label>
                 <input
@@ -261,7 +237,7 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
 
               <div className="relative">
                 <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
-                  <User className="w-3 h-3 mr-1 text-blue-500" />
+                  <Users className="w-3 h-3 mr-1 text-blue-500" />
                   Last Name
                 </label>
                 <input
@@ -309,7 +285,7 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
             <div className="relative">
               <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
                 <Lock className="w-3 h-3 mr-1 text-blue-500" />
-                Password {isEditMode && <span className="text-gray-500 ml-1">(leave blank to keep current)</span>}
+                Password<span className="text-gray-500 ml-1">(leave blank to keep current)</span>
               </label>
               <input
                 type="password"
@@ -321,7 +297,7 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
                     ? "border-red-400 focus:border-red-500"
                     : "border-gray-200 focus:border-blue-400"
                 }`}
-                placeholder={isEditMode ? "Enter new password (optional)" : "Enter password"}
+           
               />
               {errors.password && (
                 <p className="text-xs text-red-500 mt-1">{errors.password}</p>
@@ -369,40 +345,11 @@ const UserForm = ({ user, onSubmit, isEditMode }: UserFormProps) => {
                 </select>
               </div>
 
-              <div className="relative">
-                <label className="flex items-center text-xs font-semibold text-gray-700 mb-2">
-                  <User className="w-3 h-3 mr-1 text-blue-500" />
-                  Status
-                </label>
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none focus:border-blue-400 transition-all duration-200"
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
+            
             </div>
 
-            {/* Submit Buttons */}
-            <div className="pt-2 space-y-3">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="w-full bg-gray-200 text-gray-700 py-2.5 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all duration-200 font-semibold text-sm shadow hover:shadow-lg"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2.5 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200 font-semibold text-sm shadow hover:shadow-lg"
-              >
-                {isEditMode ? 'Update User' : 'Create User'}
-              </button>
-            </div>
+       
+          
           </form>
         </div>
       </div>

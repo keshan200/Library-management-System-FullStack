@@ -1,30 +1,26 @@
 import { 
-  Mail, 
-  Phone, 
+
+
   Search, 
   Filter, 
-  MoreVertical, 
-  Edit, 
-  Trash2, 
   Crown, 
   Users, 
-  Eye,
   UserPlus,
   Download,
   Grid,
   List,
   Shield,
-  Badge,
-  Calendar,
   Activity
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import UserTable from '../components/tables/UserTable';
-import type { User } from '../types/User';
+import type { User, UserFormData } from '../types/User';
 import LibraryLoading from '../components/LoadingAnime';
-import { getAllUsers } from '../service/UserService';
+import { getAllUsers, signup, update_User } from '../service/UserService';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import UserForm from '../components/forms/UserForm';
+import Dialog from '../components/Dialog';
 
 
 export default function ViewAllUsersPage() {
@@ -32,11 +28,12 @@ export default function ViewAllUsersPage() {
   const [viewMode, setViewMode] = useState("grid"); 
   const [users, setUsers] = useState<User[]>([]);
   const [isLoadingUsers ,setIsLoadingUsers] =  useState(false)
-
   const [searchTerms, setSearchTerms] = useState('');
- 
   type Role = "All" | "admin" | "staff";
   const [RoleFilter, setRoleFilter] = useState<Role>("All");
+  const [selectedUser ,setSelectedUser] = useState<User | null>(null)
+  const[isAddDialogOpen , setIsAddDialogOpen] = useState(false)
+  const[isEditDialogOpen , setIsEditDialogOpen] = useState(false)
 
 
 
@@ -66,10 +63,64 @@ export default function ViewAllUsersPage() {
   },[])
 
 
+ function cancelDialog(): void {
+    throw new Error('Function not implemented.');
+  }
+
+
+ 
+
+
+const handleAddUser = async (userData: UserFormData) => {
+  try {
+    const newUser = await signup(userData);
+
+
+
+    setUsers((prev) => [...prev,newUser ])
+    toast.success("User added successfully!");
+    setIsAddDialogOpen(false);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error.message);
+    } else {
+      toast.error("Something went wrong");
+    }
+  }
+};
 
 
 
 
+
+const handleUpdateUser = async (userData: Omit<User, "_id" >) => {
+  if (!selectedUser) return;
+
+  try {
+    const response = await update_User(selectedUser._id, {
+      ...userData,
+      status: selectedUser.status, 
+    });
+
+    const updatedUser = response.data;
+
+    setUsers((prev) =>
+      prev.map((user) =>
+        user._id === selectedUser._id ? updatedUser : user
+      )
+    );
+
+    toast.success("User updated successfully!");
+    setIsEditDialogOpen(false);
+    setSelectedUser(null);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error.message);
+    } else {
+      toast.error("Something went wrong");
+    }
+  }
+};
 
 
 
@@ -102,10 +153,30 @@ export default function ViewAllUsersPage() {
                 <Download className="w-4 h-4" />
                 Export
               </button>
-              <button className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl transition-all duration-200 flex items-center gap-2 shadow-lg">
+              <button 
+              onClick={() => setIsAddDialogOpen(true)}
+              className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl transition-all duration-200 flex items-center gap-2 shadow-lg">
                 <UserPlus className="w-4 h-4" />
                 Add New User
               </button>
+
+               <Dialog 
+                  isOpen={isAddDialogOpen}
+                  onCancel={cancelDialog}
+                  onConfirm={() => {
+                const form = document.querySelector("form") as HTMLFormElement;
+                if (form) {
+                  form.requestSubmit();
+                }
+
+              } }
+               >
+               <UserForm 
+                  onSubmit={handleAddUser}
+               />
+               </Dialog>
+
+
             </div>
           </div>
         </div>
