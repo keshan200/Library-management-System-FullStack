@@ -9,6 +9,7 @@ type User = {
     mobile:string
     createAt : Date
     role : "admin" | "staff"
+    status : "Active" | "Inactive"
 }
 
 
@@ -59,6 +60,12 @@ const userSchema =  new mongoose.Schema<User>({
       enum: ["admin", "staff"],
       default: "staff",
     },
+
+  status: {
+    type: String,
+    enum: ["Active", "Inactive"],
+    default: "Active",   
+  },
   },
 
   {

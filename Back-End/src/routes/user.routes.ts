@@ -2,12 +2,13 @@
 import { getAllUsers, login, logout, refreshToken, signUp } from "../controllers/auth.controller";
 import { upload } from "../middlewares/uploads";
 import { authenticateToken } from "../middlewares/authenticateToken";
+import { isAdmin } from "../middlewares/isAdmin";
 
 
 const userRouter = Router()
 userRouter.post("/signup",upload.single("img"),signUp)
 userRouter.post("/login",login)
-userRouter.get("/get",authenticateToken,getAllUsers)
+userRouter.get("/get",authenticateToken,isAdmin,getAllUsers)
 userRouter.post("/refresh-token",refreshToken)
 userRouter.post("/logout",logout)
 

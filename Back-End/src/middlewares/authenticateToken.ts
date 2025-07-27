@@ -1,9 +1,20 @@
 import { NextFunction } from "express";
 import { Request,Response } from "express";
 import { APIError } from "../errors/ApiErrors";
-import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken"
+import jwt, { JsonWebTokenError, JwtPayload, TokenExpiredError } from "jsonwebtoken"
 import { error } from "console";
 import { decode } from "punycode";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        role?: string;
+      };
+    }
+  }
+}
 
 export const authenticateToken = (req:Request,res:Response,next:NextFunction) =>{
 
@@ -16,6 +27,8 @@ export const authenticateToken = (req:Request,res:Response,next:NextFunction) =>
        }
 
        jwt.verify(
+
+         
          token,
          process.env.ACCESS_SECRET_TOKEN!,
 
@@ -34,6 +47,13 @@ export const authenticateToken = (req:Request,res:Response,next:NextFunction) =>
               if(!decoded || typeof decoded === "string"){
                 throw new APIError(401,"Error Access Token Payload Error")
               }
+               
+              req.user = {
+                  id: (decoded as JwtPayload).id,
+                  role: (decoded as JwtPayload).role,
+               };
+            console.log("User info from token:", req.user);
+               
 
               next()
 

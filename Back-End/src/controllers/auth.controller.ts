@@ -6,16 +6,16 @@ import jwt, { JsonWebTokenError, JwtPayload, TokenExpiredError }  from "jsonwebt
 import { error } from "console";
 
 
-
-const create_access_token = (userId:string) =>{
+const create_access_token = (userId: string, role: string) => {
   return jwt.sign(
-    {userId},
+    {
+      id: userId,   
+      role: role,   
+    },
     process.env.ACCESS_SECRET_TOKEN!,
-    {expiresIn:"1m"}
-  )
-
-}
-
+    { expiresIn: "1m" }
+  );
+};
 
 
 
@@ -100,7 +100,7 @@ export const login  = async(req:Request,res:Response,next:NextFunction) => {
          throw new APIError(401,"Invalid Credentials")
        }
 
-       const AccessToken =  create_access_token(user._id.toString())
+       const AccessToken =  create_access_token(user._id.toString(),user.role.toString())
        const RefreshToken =  create_refresh_token(user._id.toString())
 
        console.log(RefreshToken)
@@ -110,6 +110,7 @@ export const login  = async(req:Request,res:Response,next:NextFunction) => {
        res.cookie("refreshToken",RefreshToken,{
           httpOnly:true,
           secure:isProd,
+          sameSite:isProd ? "strict":"lax" ,
           maxAge:7 * 24 * 60 * 60 * 1000,
           path:"/api/auth/refresh-token"
        })
@@ -176,8 +177,21 @@ export const refreshToken = async (req:Request,res:Response,next:NextFunction) =
             throw new APIError(401,"user not found")
           }
 
-          const newAcessToken = create_access_token(user._id.toString())
-          res.status(200).json({accessToken : newAcessToken})
+          const newAcessToken = create_access_token(user._id.toString(),user.role.toString())
+          res.status(200).json({accessToken : newAcessToken,
+
+
+             user: {
+            id: user._id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            img: user.img,
+            role: user.role,
+            mobile: user.mobile,
+            createdAt: user.createAt,
+          },
+          })
 
        }
      )
