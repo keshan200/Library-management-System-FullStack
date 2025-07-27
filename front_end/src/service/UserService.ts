@@ -17,8 +17,8 @@ export const getAllUsers = async():Promise<User[]> => {
         withCredentials:true
     })
     return response.data
-
 }
+
 
 
 export const signup =  async (userData :UserFormData) => {

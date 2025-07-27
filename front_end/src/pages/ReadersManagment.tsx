@@ -1,5 +1,5 @@
 import  { useEffect, useState } from 'react';
-import { Search, Filter, Plus, User, UserCheck, Trash2 } from 'lucide-react';
+import { Search, Filter, Plus, User, UserCheck, Trash2, Activity, Crown, Shield, Users } from 'lucide-react';
 
 
 
@@ -109,6 +109,8 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
      
   }
 
+  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -121,6 +123,8 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
               </h1>
             <p className="text-gray-600 text-lg">Manage your library members and their preferences</p>
           </div>
+
+        
 
 
              <button
@@ -165,6 +169,64 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
 
           </div>
         </div>
+
+
+
+
+           {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{}</p>
+                <p className="text-sm text-gray-600">Total Users</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                <Activity className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{22}</p>
+                <p className="text-sm text-gray-600">Active Users</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
+                <Crown className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{}</p>
+                <p className="text-sm text-gray-600">Administrators</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{}</p>
+                <p className="text-sm text-gray-600">Staff Members</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
 
         {/* Filters */}
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">

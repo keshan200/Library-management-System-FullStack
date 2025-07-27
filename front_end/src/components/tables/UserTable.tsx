@@ -70,7 +70,7 @@ const filteredUsers = user.filter((u) => {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <img
-                            src={user.img}
+                            src={`http://localhost:3000/${user.img}`}
                             alt={`${user.first_name} ${user.last_name}`}
                             className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
                           />
