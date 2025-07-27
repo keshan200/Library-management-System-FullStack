@@ -28,11 +28,16 @@ import axios from 'axios';
 
 
 export default function ViewAllUsersPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterRole, setFilterRole] = useState("ALL");
+ 
   const [viewMode, setViewMode] = useState("grid"); 
   const [users, setUsers] = useState<User[]>([]);
   const [isLoadingUsers ,setIsLoadingUsers] =  useState(false)
+
+  const [searchTerms, setSearchTerms] = useState('');
+ 
+  type Role = "All" | "admin" | "staff";
+  const [RoleFilter, setRoleFilter] = useState<Role>("All");
+
 
 
 
@@ -164,8 +169,8 @@ export default function ViewAllUsersPage() {
               <input
                 type="text"
                 placeholder="Search users by name or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchTerms}
+                onChange={(e) => setSearchTerms(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200"
               />
             </div>
@@ -174,13 +179,13 @@ export default function ViewAllUsersPage() {
               <div className="relative">
                 <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <select
-                  value={filterRole}
-                  onChange={(e) => setFilterRole(e.target.value)}
+                  value={RoleFilter}
+                   onChange={(e) => setRoleFilter(e.target.value as Role)}
                   className="pl-10 pr-8 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 appearance-none"
                 >
                   <option value="ALL">All Roles</option>
-                  <option value="ADMIN">Administrators</option>
-                  <option value="STAFF">Staff Members</option>
+                  <option value="admin">Administrators</option>
+                  <option value="staff">Staff Members</option>
                 </select>
               </div>
 
@@ -283,7 +288,12 @@ export default function ViewAllUsersPage() {
           </div> */}</div>
         ) : (
           // List View
-         <UserTable user={users} />
+         <UserTable
+          user={users}
+          searchTerm={searchTerms}
+          roleFilter={RoleFilter} 
+         
+          />
 
         )}
 

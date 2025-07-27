@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Bell, Book, ChevronDown, Crown, LogOut, Search, Settings, User } from "lucide-react";
+import { Bell, Book, ChevronDown, Crown, LogOut, Search, Settings, User, UserCog } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/useAuth";
@@ -101,11 +101,12 @@ const handleLogout = async() => {
                   </span>
                 </button>
 
+                {currentUser.role === "admin" && (
                  <div className="flex items-center gap-2 bg-yellow-100 text-yellow-700 px-4 py-2 rounded-full text-sm font-medium">
                   <Crown className="w-4 h-4" />
                   <span>Admin Access</span>
                  </div>
-
+                 )}
                   {/* User Profile Dropdown */}
                 <div className="relative">
                   <button
@@ -135,7 +136,7 @@ const handleLogout = async() => {
                   
                   {/* Dropdown Menu */}
                   {isProfileOpen && (
-                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
                       {/* User Info */}
                       <div className="px-4 py-3 border-b border-gray-100">
                         <div className="flex items-center space-x-3">
@@ -155,7 +156,7 @@ const handleLogout = async() => {
                       </div>
                       
                       {/* Menu Items */}
-                      <div className="py-2">
+                      <div className="py-2 ">
                         <button className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3 text-gray-700">
                           <User className="w-4 h-4" />
                           <span>View Profile</span>
@@ -166,8 +167,16 @@ const handleLogout = async() => {
                           <Settings className="w-4 h-4" />
                           <span>Settings</span>
                         </button>
+                    {currentUser.role === "admin" && (
+                         <button
+                        onClick={() => navigate("/users")}
+                        className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3 text-yellow-500">
+                          <UserCog  className="w-4 h-4" />
+                          <span>User Managment</span>
+                        </button>
+                      )}
                       </div>
-                      
+                   
                       {/* Logout */}
 
                      
