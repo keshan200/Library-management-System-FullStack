@@ -45,3 +45,21 @@ export const lendBooks = async (req: Request, res: Response, next: NextFunction)
     next(error);
   }
 }
+
+
+
+
+
+export const getAllLendings = async (req: Request, res: Response) => {
+  try {
+    const lendings = await LendingModel.find()
+      .populate('reader', 'firstName lastName email') 
+      .populate('book', 'name price')                
+      .sort({ createdAt: -1 });                      
+
+    res.status(200).json(lendings);
+  } catch (error) {
+    console.error('Error fetching lendings:', error);
+    res.status(500).json({ message: 'Failed to fetch lendings' });
+  }
+};

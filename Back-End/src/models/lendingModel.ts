@@ -11,7 +11,7 @@ export interface Lending extends Document{
     isOverdue:boolean
     daysOverDue? :number
 
-    createAt :Date
+    createAt :Date 
     updateAt:Date
 
 }
