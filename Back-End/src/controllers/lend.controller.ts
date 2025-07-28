@@ -5,6 +5,7 @@ import { APIError } from "../errors/ApiErrors";
 import { LendingModel } from "../models/lendingModel";
 
 
+
 export const lendBooks = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { reader, book, lendDate, dueDate } = req.body;
@@ -47,14 +48,11 @@ export const lendBooks = async (req: Request, res: Response, next: NextFunction)
 }
 
 
-
-
-
 export const getAllLendings = async (req: Request, res: Response) => {
   try {
     const lendings = await LendingModel.find()
-      .populate('reader', 'firstName lastName email') 
-      .populate('book', 'name price')                
+      .populate('reader') 
+      .populate('book')                
       .sort({ createdAt: -1 });                      
 
     res.status(200).json(lendings);
@@ -63,3 +61,5 @@ export const getAllLendings = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Failed to fetch lendings' });
   }
 };
+
+
