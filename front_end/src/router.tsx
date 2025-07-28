@@ -10,6 +10,7 @@ import { ModernReaderPage } from "./pages/ReadersManagment";
 import SettingsPage from "./pages/SettingPage";
 import ViewAllUsersPage from "./pages/UserSignUp";
 import FullPageLayout from "./pages/FullPageLayout";
+import LendingPage from "./pages/LendingPage";
 
 
 
@@ -32,6 +33,8 @@ const router = createBrowserRouter([
           {path:"/dashboard", element: <Dashboard />},
           {path:"/books", element: <ModernBookPage />},
           {path:"/members",element :<ModernReaderPage />},
+          {path:"/lending",element :<LendingPage />},
+
          
          ]
        },

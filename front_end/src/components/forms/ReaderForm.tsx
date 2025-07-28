@@ -73,7 +73,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElemen
     }));
   }
 
-  // Clear specific error if it exists
+
   if (errors[name as keyof FormErrors]) {
     setErrors((prev) => ({
       ...prev,

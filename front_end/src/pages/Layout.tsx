@@ -7,6 +7,7 @@ const Layout = () => {
 
 
 
+
  if(isAuthenticating)return<div>Loading........</div>
 
   const hideNavbar = location.pathname === "/" || location.pathname === "/login";

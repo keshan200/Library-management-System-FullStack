@@ -12,18 +12,30 @@ const Navbar = () => {
   const {isLoggedIn ,logout:unauthenticate,user} = useAuth()
   const[isLoading ,setIsLoading] =useState(false)
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState({
+  name: "",
+  email: "",
+  role: "",
+  avatar: ""
+});
+
+
+
+useEffect(() => {
+   console.log("User in useEffect:", user);
+  if (user) {
+    setCurrentUser({
+      name: `${user.first_name} ${user.last_name}`,
+      email: user.email,
+      role: user.role,
+      avatar: user.img ? `http://localhost:3000/${user.img}` : ""
+    })  
+  }
+}, [user]);
 
   
 
 
-  const currentUser = {
-    name: `${user?.first_name} ${user?.last_name}`,
-    email: user?.email,
-    role: user?.role,
-    avatar:`http://localhost:3000/${user?.img}`
-  };
-
- console.log("currect user",currentUser)
 
   // Mock data for overdue books count
   const overdueBooks = [
@@ -42,8 +54,6 @@ const handleLogout = async() => {
       toast.success("Logout Successfull!")
       unauthenticate()
       navigate("/login")
-
-      console.log("log ekat awa")
     }catch(error:any){
       if(axios .isAxiosError(error)){
         toast.error(error.message)
@@ -57,9 +67,6 @@ const handleLogout = async() => {
   }
 
 
-  useEffect(()=>{
-   currentUser
-  },[user])
 
   return (
     <nav className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 shadow-2xl w-screen">
@@ -204,3 +211,5 @@ const handleLogout = async() => {
 };
 
 export default Navbar;
+
+
