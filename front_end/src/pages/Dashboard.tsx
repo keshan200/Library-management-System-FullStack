@@ -1,4 +1,4 @@
-import React, { use, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { 
   Search, 
   Book, 
@@ -18,10 +18,23 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import LibraryLoading from '../components/LoadingAnime';
+import toast from 'react-hot-toast';
+import { sendOverdueEmails } from '../service/LendingService';
+
+
+interface OverdueBook {
+  readerName: string
+  bookTitle: string
+  daysOverdue: number
+  avatar: string
+}
+
+
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading ,setIsLoading]=useState(false) 
+  const [overdueBooks, setOverdueBooks] = useState<OverdueBook[]>([])
 
   // Mock data
   const stats = {
@@ -42,12 +55,7 @@ const Dashboard = () => {
     { id: 4, bookTitle: 'Educated', readerName: 'Rajesh Kumar', loanDate: '2024-07-18', dueDate: '2024-08-01', status: 'Due Soon', avatar: 'RK' }
   ];
 
-  const overdueBooks = [
-    { readerName: 'Priya Jayawardena', bookTitle: 'To Kill a Mockingbird', daysOverdue: 12, email: 'priya.j@email.com', avatar: 'PJ' },
-    { readerName: 'Saman Wickramasinghe', bookTitle: '1984', daysOverdue: 8, email: 'saman.w@email.com', avatar: 'SW' },
-    { readerName: 'Thilini Perera', bookTitle: 'Pride and Prejudice', daysOverdue: 5, email: 'thilini.p@email.com', avatar: 'TP' },
-    { readerName: 'Dinesh Silva', bookTitle: 'The Great Gatsby', daysOverdue: 3, email: 'dinesh.s@email.com', avatar: 'DS' }
-  ];
+ 
 
   const topBooks = [
     { title: 'Atomic Habits', author: 'James Clear', timesLoaned: 24, category: 'Self-Help' },
@@ -105,7 +113,40 @@ const Dashboard = () => {
   }
 
 
+  const handleSendReminders = async () => {
+  try {
+    setIsLoading(true);
+  
+    await sendOverdueEmails();
+    toast.success('Reminders sent successfully!');
+  } catch (err: any) {
+    toast.error(err?.response?.data?.message || 'Failed to send reminders');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
+
+
+const OverdueBooksSection = () => {
+  useEffect(() => {
+    fetch("/api/notification/overdue") 
+      .then((res) => res.json())
+      .then((data) => {
+        const formatted: OverdueBook[] = data.map((item: any) => ({
+          readerName: `${item.reader?.firstName || "Unknown"} ${item.reader?.lastName || ""}`,
+          bookTitle: item.book?.title || "Unknown Book",
+          daysOverdue: item.daysOverDue || 0,
+          avatar: (item.reader?.firstName?.charAt(0) || "U") + (item.reader?.lastName?.charAt(0) || ""),
+        }))
+        setOverdueBooks(formatted)
+      })
+      .catch((err) => {
+        console.error("Failed to fetch overdue books", err)
+      })
+  }, [])
+
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -303,4 +344,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Dashboard

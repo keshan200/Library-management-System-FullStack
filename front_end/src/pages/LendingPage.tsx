@@ -2,15 +2,17 @@ import  { useEffect, useState } from 'react';
 import {  Users, Calendar, Clock, Plus, Search, Filter, Eye, Edit, Trash2, CheckCircle, AlertCircle, XCircle, ArrowUpDown, Download } from 'lucide-react';
 import type { Reader } from '../types/Reader';
 import Dialog from '../components/Dialog';
-import type { Lending, LendingAddForm } from '../types/Lending';
-import { booksData, LendingData, readerData } from '../data/data';
+import type { Lending, LendingAddForm, LendingTable } from '../types/Lending';
+import { booksData, LendingData, LendingTableData, readerData } from '../data/data';
 import type { Book } from '../types/Book';
 import LendingForm from '../components/forms/LendingForm';
-import { add_lending, update_lending } from '../service/LendingService';
+import { add_lending, getAllLendings, update_lending } from '../service/LendingService';
 import { toast } from 'react-hot-toast';
 import { getAllReaders } from '../service/readerService';
 import axios from 'axios';
 import { getAllBooks } from '../service/bookService';
+import { LendingsTable } from '../components/tables/Lending';
+import LendingDialog from '../components/LendingDialod';
 
 const LendingPage: React.FC = () => {
 
@@ -18,11 +20,13 @@ const LendingPage: React.FC = () => {
   const [book,setBook] = useState<Book[]>(booksData)
   const[reader ,setReader] = useState<Reader[]>(readerData)
   const [lending ,setLending] = useState<Lending[]>(LendingData)
+
+    const [lendingTable ,setLendingTable] = useState<LendingTable[]>(LendingTableData)
    
   const [isAddDialogOpen ,setIsAddDialogOpen] = useState(false)
   const [SelectedLending , setSelectedLending] = useState<Lending | null>(null)
  
-  const fecthAllReaders = async()=>{
+   const fecthAllReaders = async()=>{
        
        try{
         
@@ -58,6 +62,24 @@ const LendingPage: React.FC = () => {
   }
 
 
+  const fetchLending = async () => {
+      try{
+     
+      const result =  await getAllLendings()
+       setLendingTable(result)
+
+       console.log("res",result)
+    }catch(erro){
+       if(axios .isAxiosError(erro)){
+        toast.error(erro.message)
+       }else{
+         toast.error("somthing went wrong")
+       }
+    } finally{
+    }
+  }
+
+
 
   
 
@@ -65,6 +87,7 @@ const LendingPage: React.FC = () => {
 useEffect(()=>{
     fecthAllReaders()
     fetchBookData()
+    fetchLending()
   },[])
 
 
@@ -186,9 +209,9 @@ const handleFormSubmit = async (lendingData: LendingAddForm | Lending) => {
             title='create new lending'
             >
                <LendingForm 
-                              books={book}
-                              readers={reader} 
-                              onSubmit={handleFormSubmit }                            
+                    books={book}
+                    readers={reader} 
+                    onSubmit={handleFormSubmit }                            
                />
                             
 
@@ -285,7 +308,10 @@ const handleFormSubmit = async (lendingData: LendingAddForm | Lending) => {
         </div>
 
         {/* Table */}
-       
+         
+        <LendingsTable lending={lendingTable}        
+        
+        />
 
         {/* Pagination */}
         <div className="flex items-center justify-between mt-6">
@@ -396,7 +422,9 @@ const handleFormSubmit = async (lendingData: LendingAddForm | Lending) => {
           </div>
         </div>
       </div>
-    </div>
+    </div> 
+
+
   );
 };
 

@@ -1,10 +1,11 @@
 import { apiClient, BASE_URL } from "./apiClient";
-import type { Lending, LendingAddForm } from "../types/Lending";
+import type { Lending, LendingAddForm, LendingTable } from "../types/Lending";
+import axios from "axios";
 
 const LENDING_API_URL = `${BASE_URL}/lend`;
 
 
-export const getAllLendings = async (): Promise<Lending[]> => {
+export const getAllLendings = async (): Promise<LendingTable[]> => {
   const response = await apiClient.get(`${LENDING_API_URL}/get`);
   return response.data;
 };
@@ -24,4 +25,13 @@ export const update_lending = async (_id: string, lendingData: Omit<Lending, "_i
 
 export const delete_lending = async (_id: string): Promise<void> => {
   await apiClient.delete(`${LENDING_API_URL}/delete/${_id}`);
+};
+
+
+export const sendOverdueEmails = async () => {
+  const res = await axios.post(
+    `${BASE_URL}/notification/overdue`,
+    {},
+  );
+  return res.data;
 };
