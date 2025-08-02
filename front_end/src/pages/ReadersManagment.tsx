@@ -16,7 +16,7 @@ import LibraryLoading from '../components/LoadingAnime';
 
 export const ModernReaderPage : React.FC = () => {
 
-  const[readers,setReaders] =  useState<Reader[]>(readerData);
+   const[readers,setReaders] =  useState<Reader[]>(readerData);
   const [searchTerms, setSearchTerms] = useState('');
   const [statusFilter, setStatusFilter] = useState<'All' | 'Active' | 'Inactive'>('All');
 

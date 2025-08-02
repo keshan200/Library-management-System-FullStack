@@ -30,8 +30,7 @@ export const ModernBookPage : React.FC = () => {
 
 
 
-
-  const fetchBookData = async () => {
+   const fetchBookData = async () => {
     try{
       setIsLoading(true)
       const result =  await getAllBooks()

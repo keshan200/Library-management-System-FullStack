@@ -1,7 +1,7 @@
 import React, { use, useEffect, useState } from 'react';
 import { 
   Search, 
-  Book, 
+  Book as bIcon, 
   Users, 
   BookOpen, 
   AlertCircle, 
@@ -19,7 +19,16 @@ import {
 } from 'lucide-react';
 import LibraryLoading from '../components/LoadingAnime';
 import toast from 'react-hot-toast';
-import { sendOverdueEmails } from '../service/LendingService';
+import { getAllLendings } from '../service/LendingService';
+import { getAllBooks } from '../service/bookService';
+import type { Book } from '../types/Book';
+import axios from 'axios';
+import { booksData, LendingData, LendingTableData, readerData } from '../data/data';
+import type { Reader } from '../types/Reader';
+import type { Lending, LendingTable } from '../types/Lending';
+import { getAllReaders } from '../service/readerService';
+import { LendingsTable } from '../components/tables/Lending';
+import { sendOverdueNotifications } from '../service/EmailService';
 
 
 interface OverdueBook {
@@ -32,16 +41,69 @@ interface OverdueBook {
 
 
 const Dashboard = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [bookcount, setBookcount] = useState<Book[]>(booksData);
+  const [readercount, setreadercount] = useState<Reader[]>(readerData);
+   const [lendingcount, setLendingcount] = useState<LendingTable[]>(LendingTableData)
+   const [dueLenCount ,setDueLenCount] = useState<LendingTable[]>(LendingTableData)
+
   const [isLoading ,setIsLoading]=useState(false) 
   const [overdueBooks, setOverdueBooks] = useState<OverdueBook[]>([])
 
+ 
+
+
+ const countSet = async () => {
+    try{
+      setIsLoading(true)
+      const books =  await getAllBooks()
+      const readers =  await getAllReaders()
+      const lending =  await getAllLendings()
+      
+       
+      if(books){
+       setBookcount(books)
+      }
+
+      if(readers){
+        setreadercount(readers)
+      }
+
+      if(lending){
+        
+      
+
+        const DueLen = lending.filter((l) => l.isOverdue === true );
+
+        setDueLenCount(DueLen)
+        setLendingcount(lending)
+      }
+
+
+    
+
+    }catch(erro){
+       if(axios .isAxiosError(erro)){
+        toast.error(erro.message)
+       }else{
+         toast.error("somthing went wrong")
+       }
+    } finally{
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(()=>{
+     countSet()
+  },[])
+
+
+  
   // Mock data
   const stats = {
-    totalBooks: 1247,
-    totalReaders: 358,
-    activeLoans: 142,
-    overdueBooks: 23,
+    totalBooks: bookcount.length,
+    totalReaders: readercount.length,
+    activeLoans: lendingcount.length,
+    overdueBooks: dueLenCount.length,
     booksAddedThisMonth: 67,
     newReadersThisMonth: 24,
     returnedThisWeek: 89,
@@ -54,6 +116,7 @@ const Dashboard = () => {
     { id: 3, bookTitle: 'The Seven Husbands', readerName: 'Nisha Fernando', loanDate: '2024-07-19', dueDate: '2024-08-02', status: 'Active', avatar: 'NF' },
     { id: 4, bookTitle: 'Educated', readerName: 'Rajesh Kumar', loanDate: '2024-07-18', dueDate: '2024-08-01', status: 'Due Soon', avatar: 'RK' }
   ];
+
 
  
 
@@ -113,40 +176,21 @@ const Dashboard = () => {
   }
 
 
-  const handleSendReminders = async () => {
-  try {
-    setIsLoading(true);
+
+
+
+const SendMailButton =async () => {
+ 
+    try {
+      await sendOverdueNotifications();
+      toast.success("Emails sent successfully!");
+    } catch (error) {
+      toast.error("Failed to send emails.");
+      console.error("Mail error:", error);
+    }
   
-    await sendOverdueEmails();
-    toast.success('Reminders sent successfully!');
-  } catch (err: any) {
-    toast.error(err?.response?.data?.message || 'Failed to send reminders');
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-
-
-const OverdueBooksSection = () => {
-  useEffect(() => {
-    fetch("/api/notification/overdue") 
-      .then((res) => res.json())
-      .then((data) => {
-        const formatted: OverdueBook[] = data.map((item: any) => ({
-          readerName: `${item.reader?.firstName || "Unknown"} ${item.reader?.lastName || ""}`,
-          bookTitle: item.book?.title || "Unknown Book",
-          daysOverdue: item.daysOverDue || 0,
-          avatar: (item.reader?.firstName?.charAt(0) || "U") + (item.reader?.lastName?.charAt(0) || ""),
-        }))
-        setOverdueBooks(formatted)
-      })
-      .catch((err) => {
-        console.error("Failed to fetch overdue books", err)
-      })
-  }, [])
-
 }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -164,7 +208,7 @@ const OverdueBooksSection = () => {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
-            icon={Book}
+            icon={bIcon}
             title="Total Books"
             value={stats.totalBooks.toLocaleString()}
             trend="up"
@@ -208,29 +252,29 @@ const OverdueBooksSection = () => {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-gray-800 flex items-center">
                 <Calendar className="w-5 h-5 mr-2 text-blue-600" />
-                Recent Loans
+                Recent Lendings
               </h3>
               <button className="text-blue-600 hover:bg-blue-50 px-3 py-1 rounded-lg text-sm font-medium transition-colors">
                 View All
               </button>
             </div>
             <div className="space-y-4">
-              {recentLoans.map((loan) => (
-                <div key={loan.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+              {lendingcount.map((lend) => (
+                <div key={lend._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                   <div className="flex items-center space-x-4">
-                    <Avatar initials={loan.avatar} color="bg-gradient-to-r from-blue-500 to-indigo-500" />
+                    <Avatar initials={lend.reader.address} color="bg-gradient-to-r from-blue-500 to-indigo-500" />
                     <div>
-                      <p className="font-semibold text-gray-800">{loan.bookTitle}</p>
-                      <p className="text-sm text-gray-600">by {loan.readerName}</p>
-                      <p className="text-xs text-gray-500">Due: {new Date(loan.dueDate).toLocaleDateString()}</p>
+                      <p className="font-semibold text-gray-800">{lend.book.name}</p>
+                      <p className="text-sm text-gray-600">by {`${lend.reader.firstName , lend.reader.lastName}`}</p>
+                      <p className="text-xs text-gray-500">Due: {new Date(lend.dueDate).toLocaleDateString()}</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                      loan.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      lend.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                     }`}>
-                      {loan.status === 'Active' ? <CheckCircle className="w-4 h-4 mr-1" /> : <Clock className="w-4 h-4 mr-1" />}
-                      {loan.status}
+                      {lend.status === 'Active' ? <CheckCircle className="w-4 h-4 mr-1" /> : <Clock className="w-4 h-4 mr-1" />}
+                      {lend.status}
                     </span>
                   </div>
                 </div>
@@ -245,21 +289,23 @@ const OverdueBooksSection = () => {
                 <AlertCircle className="w-5 h-5 mr-2 text-red-600" />
                 Overdue Books
               </h3>
-              <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors">
+              <button
+              onClick={SendMailButton}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors">
                 <Mail className="w-4 h-4 mr-2" />
                 Send Reminders
               </button>
             </div>
             <div className="space-y-4">
-              {overdueBooks.map((item, index) => (
+              {dueLenCount.map((due, index) => (
                 <div key={index} className="p-4 border border-red-100 bg-red-50 rounded-xl">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
-                      <Avatar initials={item.avatar} color="bg-red-500" />
+                      <Avatar color="bg-red-500" initials={`http://localhost:3000/${due.book.coverImg}`} />
                       <div>
-                        <p className="font-semibold text-gray-800 text-sm">{item.readerName}</p>
-                        <p className="text-sm text-gray-600">{item.bookTitle}</p>
-                        <p className="text-xs text-red-600 font-medium">{item.daysOverdue} days overdue</p>
+                        <p className="font-semibold text-gray-800 text-sm">{due.reader.firstName}</p>
+                        <p className="text-sm text-gray-600">{due.book.name}</p>
+                        <p className="text-xs text-red-600 font-medium">{due.daysOverDue} days overdue</p>
                       </div>
                     </div>
                     <button className="p-1 hover:bg-red-100 rounded-lg">
@@ -345,3 +391,4 @@ const OverdueBooksSection = () => {
 };
 
 export default Dashboard
+

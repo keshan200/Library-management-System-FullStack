@@ -28,10 +28,3 @@ export const delete_lending = async (_id: string): Promise<void> => {
 };
 
 
-export const sendOverdueEmails = async () => {
-  const res = await axios.post(
-    `${BASE_URL}/notification/overdue`,
-    {},
-  );
-  return res.data;
-};

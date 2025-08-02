@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/useAuth";
+import LibraryLoading from "../components/LoadingAnime";
 
 const Layout = () => {
  const {isAuthenticating,isLoggedIn} = useAuth()
@@ -8,7 +9,10 @@ const Layout = () => {
 
 
 
- if(isAuthenticating)return<div>Loading........</div>
+ if(isAuthenticating){
+  return <LibraryLoading />
+  }
+
 
   const hideNavbar = location.pathname === "/" || location.pathname === "/login";
 
