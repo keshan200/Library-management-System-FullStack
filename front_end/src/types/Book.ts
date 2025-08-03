@@ -7,6 +7,7 @@ export interface Book {
   totalBooks: number;   
   availableBooks: number;
     
+  createdAt ? :Date
 }
 
 export type BookFromData = {

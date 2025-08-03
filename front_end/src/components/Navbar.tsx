@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/useAuth";
 import { logout } from "../service/authService";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,7 +22,7 @@ const Navbar = () => {
 
 
 
-useEffect(() => {
+{/**useEffect(() => {
    console.log("User in useEffect:", user);
   if (user) {
     setCurrentUser({
@@ -31,9 +32,35 @@ useEffect(() => {
       avatar: user.img ? `http://localhost:3000/${user.img}` : ""
     })  
   }
-}, [user]);
+}, [user]); */}
 
   
+
+
+
+ useEffect(() => {
+  const cookieUser = Cookies.get("User");
+
+  console.log("cookieUser",cookieUser)
+  if (cookieUser) {
+    try {
+      const parsedUser = JSON.parse(cookieUser);
+      
+      setCurrentUser({
+      name: `${parsedUser.first_name} ${parsedUser.last_name}`,
+      email: parsedUser.email,
+      role: parsedUser.role,
+      avatar: parsedUser.img ? `http://localhost:3000/${parsedUser.img}` : ""
+    })  
+    } catch (e) {
+      console.error("Failed to parse user from cookie:", e);
+    }
+  }
+}, []);
+ console.log("user",currentUser)
+
+
+
 
 
 

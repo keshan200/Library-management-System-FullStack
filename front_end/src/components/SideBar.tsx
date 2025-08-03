@@ -6,12 +6,31 @@ import {
   BookMarked, 
   History
 } from 'lucide-react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { booksData, readerData, LendingTableData } from '../data/data';
+import { getAllBooks } from '../service/bookService';
+import { getAllLendings } from '../service/LendingService';
+import { getAllReaders } from '../service/readerService';
+import type { Book } from '../types/Book';
+import type { LendingTable } from '../types/Lending';
+import type { Reader } from '../types/Reader';
 
 
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+
+   
+
+  const [bookcount, setBookcount] = useState<Book[]>(booksData);
+  const [readercount, setreadercount] = useState<Reader[]>(readerData);
+   const [lendingcount, setLendingcount] = useState<LendingTable[]>(LendingTableData)
+   const [dueLenCount ,setDueLenCount] = useState<LendingTable[]>(LendingTableData)
+
 
 
   const menuItems = [
@@ -28,10 +47,46 @@ const Sidebar = () => {
   }
   
 
+ const countSet = async () => {
+    try{
+     
+      const books =  await getAllBooks()
+      const readers =  await getAllReaders()
+      const lending =  await getAllLendings()
+      
+       
+      if(books){
+       setBookcount(books)
+      }
+
+      if(readers){
+        setreadercount(readers)
+      }
+
+      if(lending){
+
+        const DueLen = lending.filter((l) => l.isOverdue === true );
+        setDueLenCount(DueLen)
+        setLendingcount(lending)
+      }
 
 
+    
 
+    }catch(erro){
+       if(axios .isAxiosError(erro)){
+        toast.error(erro.message)
+       }else{
+         toast.error("somthing went wrong")
+       }
+    } finally{
+      
+    }
+  }
 
+  useEffect(()=>{
+     countSet()
+  },[])
 
 
 
@@ -101,10 +156,13 @@ const Sidebar = () => {
             Quick Stats
           </h3>
           <div className="space-y-2">
+
+            {bookcount.map((b)=>(
             <div className="flex justify-between text-sm">
               <span className="font-medium text-slate-400">Total Books</span>
-              <span className=" font-medium text-blue-400 font-medium">12,847</span>
+              <span className=" font-medium text-blue-400 font-medium">{b.totalBooks}</span>
             </div>
+            ))}
             <div className="flex justify-between text-sm">
               <span className="font-medium text-slate-400">Active Members</span>
               <span className="font-medium text-purple-400 font-medium">3,421</span>

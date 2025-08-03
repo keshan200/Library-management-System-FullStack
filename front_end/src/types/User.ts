@@ -1,6 +1,4 @@
 export interface User{
- 
-  
   _id:string
   img : string  
   first_name:string

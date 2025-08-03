@@ -100,17 +100,19 @@ const Dashboard = () => {
 
 console.log("skadfl",readercount)
 
-const newReadersThisMonth = readercount.filter((reader) => {
-  if (!reader.createdAt) return false;
+const now = new Date();
+const getCountThisMonth = <T extends { createdAt?: string | Date }>(items: T[]): number => {
+  return items.filter((item) => {
+    if (!item.createdAt) return false;
 
-  const createdDate = new Date(reader.createdAt);
-  const now = new Date();
+    const createdDate = item.createdAt instanceof Date ? item.createdAt : new Date(item.createdAt);
 
-  return (
-    createdDate.getMonth() === now.getMonth() &&
-    createdDate.getFullYear() === now.getFullYear()
-  );
-}).length;
+    return (
+      createdDate.getMonth() === now.getMonth() &&
+      createdDate.getFullYear() === now.getFullYear()
+    );
+  }).length;
+};
 
 
 
@@ -123,8 +125,8 @@ const newReadersThisMonth = readercount.filter((reader) => {
     overdueBooks: dueLenCount.length,
 
 
-    booksAddedThisMonth: 67,
-    newReadersThisMonth: newReadersThisMonth,
+    booksAddedThisMonth: getCountThisMonth(bookcount),
+    newReadersThisMonth: getCountThisMonth(readercount),
     returnedThisWeek: 89,
     overdueRate: 16.2
   };
