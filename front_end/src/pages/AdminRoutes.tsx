@@ -19,7 +19,7 @@ const AdminRoutes =  () => {
             <Sidebar />
           </div>
 
-          <div className='h- flex-1 overflow-y-auto bg-gray-50'>
+          <div className=' flex-1 overflow-y-auto bg-gray-50'>
             <Outlet />
           </div>
         </>

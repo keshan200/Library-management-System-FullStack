@@ -107,13 +107,13 @@ export const LendingsTable: React.FC<LendingTableProps> = ({ lending, onEdit }) 
 
                   <td className="py-4 px-6">
                     <div className="flex items-center justify-center space-x-2">
-                      <button className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors">
+                     {/** <button className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors">
                         <Eye className="w-4 h-4" />
-                      </button>
-                      <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                      </button> */}
+                      <button className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 hover:text-blue-700 transition-all duration-200 hover:scale-105 group/btn">
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors">
+                      <button   className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700 transition-all duration-200 hover:scale-105 group/btn">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>

@@ -7,6 +7,8 @@ export interface Reader{
   phone:string
   address:string
   status : "Active" | "Inactive"
+
+  createdAt ? :Date
 }
 
 

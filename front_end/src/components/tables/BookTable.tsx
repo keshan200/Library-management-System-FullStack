@@ -157,6 +157,7 @@ const BookTable: React.FC<BookDataProps> = ({ books,onEdit,onDelete }) => {
                           >
                             <Edit3 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
                           </button>
+                          
                           <button
                             onClick={() => onDelete(book)}
                             className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700 transition-all duration-200 hover:scale-105 group/btn"

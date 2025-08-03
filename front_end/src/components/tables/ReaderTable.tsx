@@ -112,7 +112,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({ readers, onEdit  ,searchTerm,
         
             <button
               onClick={() => onEdit(reader)} 
-              className="text-blue-600 hover:underline text-sm"
+             className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 hover:text-blue-700 transition-all duration-200 hover:scale-105 group/btn"
               title="Edit Reader"
                 >
              <Edit3 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
