@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { User, Mail, Phone, MapPin, Camera } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Camera, CheckCircle, Power, XCircle } from 'lucide-react';
 import type { Reader, ReaderFormData } from '../../types/Reader';
 import toast from 'react-hot-toast';
 
@@ -7,6 +7,7 @@ interface ReaderFormProps {
   reader?: Reader | null;
   onSubmit: (readerData: Omit<Reader, "_id" | "status">) => void;
   isEditMode?: boolean;
+   onToggleStatus?: (readerId: string, currentStatus: 'Active' | 'Inactive') => void; 
 }
 
 interface FormErrors {
@@ -19,6 +20,7 @@ interface FormErrors {
 }
 
 const ReaderForm = ({ reader, onSubmit ,isEditMode}: ReaderFormProps) => {
+
   const [formData, setFormData] = useState<ReaderFormData>({
     coverImg: '',
     firstName: '',
@@ -121,6 +123,14 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElemen
     setErrors({});
   };
 
+function onToggleStatus(newStatus: "Active" | "Inactive"): void {
+  console.log("New status:", newStatus);
+
+}
+
+
+
+
   return (
     <div className="bg-gradient-to-br from-violet-50 via-blue-50 to-cyan-50 p-3">
       <div className="max-w-xl mx-auto">
@@ -134,7 +144,8 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElemen
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6">
           
           <form onSubmit={handleSubmit} className="space-y-4">
-            
+
+        
             {/* Profile Image */}
             <div className="flex justify-center mb-6">
               <div className="relative">
@@ -179,6 +190,10 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElemen
                 )}
               </div>
             </div>
+
+           
+
+
 
             {/* Name Row */}
             <div className="grid grid-cols-2 gap-3">

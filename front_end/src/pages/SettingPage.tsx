@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import LibraryLoading from "../components/LoadingAnime";
 import Cookies from "js-cookie";
 import type { User } from "../types/User";
+import { update_User } from "../service/UserService";
 
 
 export default function SettingsPage() {
@@ -21,7 +22,7 @@ export default function SettingsPage() {
 
    const [isLoading ,setIsLoading] =  useState(false)
    const [currecntUsers, setCurrentUser] = useState<User | null>(null);
-
+   const [editableUser, setEditableUser] = useState<Omit<User, "_id"> | null>(null);
 
    if(isLoading){
     return <LibraryLoading />
@@ -47,7 +48,6 @@ export default function SettingsPage() {
  console.log("user",currecntUsers)
 
 
- 
 
 
 
@@ -87,7 +87,7 @@ export default function SettingsPage() {
                 <div className="relative inline-block mb-4">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 p-1 shadow-lg">
                     <img 
-                      src={`http://localhost:300/${currecntUsers.img}`} 
+                      src={`http://localhost:3000/${currecntUsers.img}`} 
                       alt="Profile" 
                       className="w-full h-full rounded-full object-cover border-2 border-white"
                     />
@@ -105,9 +105,9 @@ export default function SettingsPage() {
                 
                 {/* Role Badge */}
                 {currecntUsers.role === "admin" && (
-                 <div className="flex items-center gap-2 bg-yellow-100 text-yellow-700 px-4 py-2 rounded-full text-sm font-medium">
-                  <Crown className="w-4 h-4" />
-                  <span>Admin Access</span>
+                 <div className="flex items-center gap-2 text-yellow-700 px-4 py-2 rounded-full text-sm font-medium">
+                  <Crown className="w-4 h-4 " />
+                  <span  >Admin Access</span>
                  </div>
                  )}
                 {/* Stats */}
@@ -189,6 +189,10 @@ export default function SettingsPage() {
                 </div>
               </div>
               )}
+
+              <button className="mt-8 px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-500 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg text-sm">
+                  Update Details
+                </button>
             </div>
 
             {/* Email Settings */}

@@ -1,18 +1,19 @@
 import React from "react";
 import type { Reader } from "../../types/Reader";
-import { Edit3 } from "lucide-react";
+import { Edit3, Eye, UserX } from "lucide-react";
 
 
 interface ReaderTableProps {
   readers: Reader[];
   onEdit: (reader: Reader) => void;
-  onDeleteSingle?: (readerId: string) => void;
+  onEditStatus: (reader:Reader) => void;
+
 
   searchTerm?: string;
   statusFilter?: 'All' | 'Active' | 'Inactive';
 }
 
-const ReaderTable: React.FC<ReaderTableProps> = ({ readers, onEdit  ,searchTerm,statusFilter}) => {
+const ReaderTable: React.FC<ReaderTableProps> = ({ readers, onEdit  ,searchTerm,statusFilter,onEditStatus}) => {
  
  
  const filteredReaders = readers.filter((reader) => {
@@ -108,7 +109,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({ readers, onEdit  ,searchTerm,
             {reader.status}
           </span>
         </td>
-        <td className="px-4 py-3  ">
+        <td className="px-4 py-3  flex gap-4  ">
         
             <button
               onClick={() => onEdit(reader)} 
@@ -117,6 +118,24 @@ const ReaderTable: React.FC<ReaderTableProps> = ({ readers, onEdit  ,searchTerm,
                 >
              <Edit3 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
            </button>
+
+         <button
+            onClick={() => onEditStatus(reader)} 
+            className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700 transition-all duration-200 hover:scale-105 group/btn"
+            title="Deactivate Reader"
+         >
+         <UserX className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+        </button>
+
+      <button
+        
+         className="p-2 rounded-lg bg-green-100 hover:bg-green-300 text-green-600 hover:text-green-700 transition-all duration-200 hover:scale-105 group/btn"
+         title="View Reader"
+       >
+       <Eye className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+     </button>
+
+
         
         </td>
       </tr>

@@ -8,26 +8,28 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import ReaderTable from '../components/tables/ReaderTable';
 import type { Reader } from '../types/Reader';
-import { readerData } from '../data/data';
+import { LendingData, LendingTableData, readerData } from '../data/data';
 import Dialog from '../components/Dialog';
 import  ReaderForm  from '../components/forms/ReaderForm';
 import LibraryLoading from '../components/LoadingAnime';
+import StatusToggleDialog from '../components/StatusModel';
+import type {  LendingTable } from '../types/Lending';
+import { getAllLendings } from '../service/LendingService';
 
 
 export const ModernReaderPage : React.FC = () => {
 
-   const[readers,setReaders] =  useState<Reader[]>(readerData);
-  const [searchTerms, setSearchTerms] = useState('');
+  const[readers,setReaders] =  useState<Reader[]>(readerData);
+  const[lendings,setLending] =  useState<LendingTable[]>(LendingTableData);
+
   const [statusFilter, setStatusFilter] = useState<'All' | 'Active' | 'Inactive'>('All');
 
   const[isReadersLoading,setIsReadersLoading] =  useState<boolean>(false)
   const[isAddDialogOpen , setIsAddDialogOpen] = useState(false)
   const[isEditDialogOpen , setIsEditDialogOpen] = useState(false)
+   const[isViewPageOpen , setIsViewPageOpen] = useState(false)
   const [selectedReader ,setSelectedReader] = useState<Reader | null>(null)
- 
-
-
-
+  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   
   
@@ -37,6 +39,8 @@ export const ModernReaderPage : React.FC = () => {
         
          setIsReadersLoading(true)
          const result =  await getAllReaders()
+         const lending =  await getAllLendings()
+         setLending(lending)
          setReaders(result)
        }catch(error){
           
@@ -95,12 +99,20 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
       setIsEditDialogOpen(true)
   }
 
+  const handleStatusToggle = (readers:Reader) => {
+       setSelectedReader(readers)
+       setIsStatusDialogOpen(true)
+  }
+
 
 
 
 
   function cancelDialog(): void {
-    throw new Error('Function not implemented.');
+  setIsAddDialogOpen(false);
+  setIsEditDialogOpen(false);
+  setIsStatusDialogOpen(false);
+  setSelectedReader(null);
   }
 
 
@@ -109,7 +121,45 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
      
   }
 
+
+
+
+  const handleStatusConfirm = async () => {
+  if (!selectedReader) return;
+
+  try {
+    const updatedStatus = selectedReader.status === "Active" ? "Inactive" : "Active";
+    const response = await update_reader(selectedReader._id, {
+      ...selectedReader,
+      status: updatedStatus,
+    });
+
+    const updatedReader = response.data;
+    setReaders((prevReaders) =>
+      prevReaders.map((reader) =>
+        reader._id === updatedReader._id ? updatedReader : reader
+      )
+    );
+    toast.success(`Reader ${updatedStatus === "Active" ? "Active" : "Inactive"} successfully!`);
+  } catch (error) {
+    toast.error("Failed to update reader status.");
+  } finally {
+    setIsStatusDialogOpen(false);
+    setSelectedReader(null);
+  }
+};
+
+
+const handleViewReader = (reader: Reader) => {
+  setSelectedReader(reader);
+  setIsViewPageOpen(true);
+};
+
+ 
+
   
+
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
@@ -148,7 +198,9 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
               } }
               title='Add New Book'>
             
-            <ReaderForm onSubmit={handleFormSubmit}/>
+            <ReaderForm
+             onSubmit={handleFormSubmit}
+            />
             </Dialog>
            
           {/*edit dialog */}
@@ -167,13 +219,16 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
             </Dialog>
        
 
+
+         
+           
           </div>
         </div>
 
 
 
 
-           {/* Stats Cards */}
+        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
             <div className="flex items-center gap-3">
@@ -272,16 +327,28 @@ const handleFormSubmit = async (readerData: Omit<Reader, "_id" | "status">) => {
       {/* Table container with fixed height */}
        
             <ReaderTable 
-            readers={readers}
-            searchTerm={searchTerm} 
-            statusFilter={statusFilter}
-            onEdit={handleEditReader}
+             readers={readers}
+             searchTerm={searchTerm}
+             statusFilter={statusFilter}
+             onEdit={handleEditReader} 
+             onEditStatus={handleStatusToggle} 
+           
             />
             
-         
+            <StatusToggleDialog
+             isOpen={isStatusDialogOpen}
+              onCancel={() => {
+                setIsStatusDialogOpen(false);
+                setSelectedReader(null);
+              }}
+             onConfirm={handleStatusConfirm}
+             reader={selectedReader}
+             lendings={lendings}
+            />
+
    
        
-    </div>
+     </div>
 
      
       </div>

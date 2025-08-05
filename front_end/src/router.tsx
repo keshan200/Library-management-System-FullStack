@@ -12,6 +12,7 @@ import ViewAllUsersPage from "./pages/UserSignUp";
 import FullPageLayout from "./pages/FullPageLayout";
 import LendingPage from "./pages/LendingPage";
 import LendingDialog from "./components/LendingDialod";
+import ReaderDetailsView from "./pages/ReaderProfile";
 
 
 
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
           {path:"/books", element: <ModernBookPage />},
           {path:"/members",element :<ModernReaderPage />},
           {path:"/lending",element :<LendingPage />},
+          {path:"/history",element :<ReaderDetailsView />},
          
 
          
