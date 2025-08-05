@@ -141,7 +141,7 @@ const handleUpdateUser = async (userData: Omit<User, "_id" >) => {
 
    
    const totalUsers = users.length;
-  const activeUsers = users.filter(user => user.status === "Active").length;
+   const activeUsers = users.filter(user => user.status === "Active").length;
    const adminUsers = users.filter(user => user.role === "admin").length;
    const staffUsers = users.filter(user => user.role === "staff").length;
 

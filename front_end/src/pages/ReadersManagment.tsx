@@ -1,5 +1,5 @@
 import  { useEffect, useState } from 'react';
-import { Search, Filter, Plus, User, UserCheck, Trash2, Activity, Crown, Shield, Users } from 'lucide-react';
+import { Search, Filter, Plus, User, UserCheck, Trash2, Activity, Crown, Shield, Users, Power } from 'lucide-react';
 
 
 
@@ -236,7 +236,7 @@ const handleViewReader = (reader: Reader) => {
                 <Users className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">{}</p>
+                <p className="text-2xl font-bold text-gray-900"> {readers.length}</p>
                 <p className="text-sm text-gray-600">Total Users</p>
               </div>
             </div>
@@ -248,27 +248,29 @@ const handleViewReader = (reader: Reader) => {
                 <Activity className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">{22}</p>
+                <p className="text-2xl font-bold text-gray-900"> {readers.filter((reader) => reader.status === "Active").length}</p>
                 <p className="text-sm text-gray-600">Active Users</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
-                <Crown className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">{}</p>
-                <p className="text-sm text-gray-600">Administrators</p>
-              </div>
-            </div>
-          </div>
+       <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+           <div className="flex items-center gap-3">
+           <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
+           <Power className="w-6 h-6 text-white" />
+       </div>
+       <div>
+         <p className="text-2xl font-bold text-gray-900">
+           {readers.filter((reader) => reader.status === "Inactive").length}
+         </p>
+        <p className="text-sm text-gray-600">Inactive Readers</p>
+      </div>
+    </div>
+   </div>
 
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-red-600 rounded-xl flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
               </div>
 
