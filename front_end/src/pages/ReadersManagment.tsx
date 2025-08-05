@@ -300,6 +300,10 @@ const handleViewReader = (reader: Reader) => {
             
             <div className="flex gap-4">
               <select
+               value={statusFilter}
+               onChange={(e) =>
+                setStatusFilter(e.target.value as 'All' | 'Active' | 'Inactive')
+                }
                   
                 className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white min-w-[120px]"
               >
@@ -309,13 +313,7 @@ const handleViewReader = (reader: Reader) => {
               </select>
               
               
-                <button
                
-                  className="px-4 py-3 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-colors flex items-center gap-2"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  Delete ({})
-                </button>
               
             </div>
           </div>
