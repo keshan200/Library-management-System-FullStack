@@ -10,7 +10,7 @@ export interface Lending extends Document{
     isReturned:boolean
     isOverdue:boolean
     daysOverDue? :number
-    status: "PENDING" | "RETURNED" | "OVERDUE";
+    status: "PENDING" | "RETURNED";
     createAt :Date 
     updateAt:Date
 
@@ -62,7 +62,7 @@ const lendingSchema = new mongoose.Schema<Lending>({
 
   status: {
     type: String,
-    enum: ["PENDING", "RETURNED", "OVERDUE"],
+    enum: ["PENDING", "RETURNED"],
     default: "PENDING",
     required: [true, "Status is required"],
   },

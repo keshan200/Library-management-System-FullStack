@@ -81,6 +81,7 @@ export const createReader = async(req:Request,res:Response,next:NextFunction) =>
         reader.email     = req.body.email || reader.email
         reader.phone     = req.body.phone || reader.phone
         reader.address   = req.body.address || reader.address
+        reader.status  =  req.body.status || reader.status
 
         if(req.file){
             reader.coverImg =  req.file.path

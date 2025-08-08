@@ -4,6 +4,7 @@ import { APIError } from "../errors/ApiErrors";
 import jwt, { JsonWebTokenError, JwtPayload, TokenExpiredError } from "jsonwebtoken"
 import { error } from "console";
 import { decode } from "punycode";
+import { userModel } from "../models/userModel";
 
 declare global {
   namespace Express {
@@ -34,9 +35,10 @@ export const authenticateToken = (req:Request,res:Response,next:NextFunction) =>
 
          (error,decoded) =>{
 
+       
               if(error){
                 if(error instanceof TokenExpiredError){
-                    throw new APIError(401,"Access Token Expired")
+                    return new APIError(401,"Access Token Expired")
                 }else if (error instanceof JsonWebTokenError){
                     throw new APIError(401,"Invalid Access Token")
                 }else{
@@ -65,3 +67,5 @@ export const authenticateToken = (req:Request,res:Response,next:NextFunction) =>
     }
 
 }
+
+

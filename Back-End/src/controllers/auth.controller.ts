@@ -115,6 +115,26 @@ export const login  = async(req:Request,res:Response,next:NextFunction) => {
           path:"/api/auth/refresh-token"
        })
 
+
+
+     res.cookie("User", JSON.stringify({
+          id: user._id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          img: user.img,
+          role: user.role,
+          mobile: user.mobile
+      }), {
+         httpOnly: false,  
+         secure: isProd,
+         sameSite: isProd ? "strict" : "lax",
+         maxAge: 7 * 24 * 60 * 60 * 1000,
+         path: "/"
+      });
+
+
+
        const userWithoutPass = {
            id:user.id,
            first_name:user.first_name,
@@ -126,6 +146,8 @@ export const login  = async(req:Request,res:Response,next:NextFunction) => {
            AccessToken
         
        }
+
+      
 
        res.status(201).json(userWithoutPass)
 
